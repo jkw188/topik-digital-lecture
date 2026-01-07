@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 3: Sinh hoạt hàng ngày</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#db2777' } /* Pink Theme */
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-house text-lg"></i> Trang chủ
+            </a>
+            <h1 class="font-bold text-lg text-slate-800 truncate px-4">Bài 3: Sinh hoạt hàng ngày</h1>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        <div class="bg-theme rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold mb-2">Từ vựng Bài 3</h2>
+                <p class="text-pink-100 opacity-90">Chủ đề: Động từ, Tính từ & Cuộc sống thường nhật.</p>
+            </div>
+            <i class="ph-fill ph-coffee absolute right-0 bottom-0 text-9xl text-pink-900 opacity-20 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Động từ
+            { w: '가다', p: 'ga-da', t: 'Động từ', m: 'Đi', ex: '학교에 갑니다. (Tôi đi học)' },
+            { w: '오다', p: 'o-da', t: 'Động từ', m: 'Đến', ex: '친구가 집에 옵니다. (Bạn đến nhà)' },
+            { w: '자다', p: 'ja-da', t: 'Động từ', m: 'Ngủ', ex: '밤에 잡니다. (Tôi ngủ vào ban đêm)' },
+            { w: '먹다', p: 'meok-da', t: 'Động từ', m: 'Ăn', ex: '밥을 먹습니다. (Tôi ăn cơm)' },
+            { w: '마시다', p: 'ma-si-da', t: 'Động từ', m: 'Uống', ex: '물을 마십니다. (Tôi uống nước)' },
+            { w: '이야기하다', p: 'i-ya-gi-ha-da', t: 'Động từ', m: 'Nói chuyện', ex: '친구와 이야기합니다. (Nói chuyện với bạn)' },
+            { w: '읽다', p: 'il-da', t: 'Động từ', m: 'Đọc', ex: '책을 읽습니다. (Tôi đọc sách)' },
+            { w: '듣다', p: 'deut-da', t: 'Động từ', m: 'Nghe', ex: '음악을 듣습니다. (Tôi nghe nhạc)' },
+            { w: '보다', p: 'bo-da', t: 'Động từ', m: 'Nhìn, xem', ex: '영화를 봅니다. (Tôi xem phim)' },
+            { w: '일하다', p: 'il-ha-da', t: 'Động từ', m: 'Làm việc', ex: '회사에서 일합니다. (Tôi làm việc ở công ty)' },
+            { w: '공부하다', p: 'gong-bu-ha-da', t: 'Động từ', m: 'Học', ex: '한국어를 공부합니다. (Tôi học tiếng Hàn)' },
+            { w: '운동하다', p: 'un-dong-ha-da', t: 'Động từ', m: 'Tập thể thao', ex: '공원에서 운동합니다. (Tập thể dục ở công viên)' },
+            { w: '쉬다', p: 'swi-da', t: 'Động từ', m: 'Nghỉ ngơi', ex: '집에서 쉽니다. (Tôi nghỉ ngơi ở nhà)' },
+            { w: '만나다', p: 'man-na-da', t: 'Động từ', m: 'Gặp gỡ', ex: '친구를 만납니다. (Tôi gặp bạn)' },
+            { w: '사다', p: 'sa-da', t: 'Động từ', m: 'Mua', ex: '옷을 삽니다. (Tôi mua áo)' },
+            { w: '좋아하다', p: 'jo-a-ha-da', t: 'Động từ', m: 'Thích', ex: '영화를 좋아합니다. (Tôi thích phim)' },
+
+            // 2. Tính từ
+            { w: '크다', p: 'keu-da', t: 'Tính từ', m: 'To, lớn', ex: '가방이 큽니다. (Cái túi to)' },
+            { w: '작다', p: 'jak-da', t: 'Tính từ', m: 'Nhỏ', ex: '교실이 작습니다. (Phòng học nhỏ)' },
+            { w: '많다', p: 'man-ta', t: 'Tính từ', m: 'Nhiều', ex: '숙제가 많습니다. (Bài tập nhiều)' },
+            { w: '적다', p: 'jeok-da', t: 'Tính từ', m: 'Ít', ex: '학생이 적습니다. (Học sinh ít)' },
+            { w: '좋다', p: 'jo-ta', t: 'Tính từ', m: 'Tốt', ex: '날씨가 좋습니다. (Thời tiết tốt)' },
+            { w: '나쁘다', p: 'na-ppeu-da', t: 'Tính từ', m: 'Xấu, tồi', ex: '기분이 나쁩니다. (Tâm trạng tồi tệ)' },
+            { w: '재미있다', p: 'jae-mi-it-da', t: 'Tính từ', m: 'Hay, thú vị', ex: '영화가 재미있습니다. (Phim hay)' },
+            { w: '재미없다', p: 'jae-mi-eop-da', t: 'Tính từ', m: 'Không hay, chán', ex: '책이 재미없습니다. (Sách chán)' },
+
+            // 3. Từ thường dùng hàng ngày
+            { w: '차', p: 'cha', t: 'Danh từ', m: 'Trà', ex: '차를 마십니다.' },
+            { w: '커피', p: 'keo-pi', t: 'Danh từ', m: 'Cà phê', ex: '커피를 좋아합니다.' },
+            { w: '빵', p: 'ppang', t: 'Danh từ', m: 'Bánh mì', ex: '빵을 먹습니다.' },
+            { w: '우유', p: 'u-yu', t: 'Danh từ', m: 'Sữa', ex: '우유를 마십니다.' },
+            { w: '영화', p: 'yeong-hwa', t: 'Danh từ', m: 'Phim', ex: '영화를 봅니다.' },
+            { w: '음악', p: 'eum-ak', t: 'Danh từ', m: 'Âm nhạc', ex: '음악을 듣습니다.' },
+            { w: '신문', p: 'sin-mun', t: 'Danh từ', m: 'Báo', ex: '신문을 읽습니다.' },
+            { w: '친구', p: 'chin-gu', t: 'Danh từ', m: 'Bạn bè', ex: '친구를 만납니다.' },
+
+            // 4. Đại từ để hỏi
+            { w: '무엇', p: 'mu-eot', t: 'Đại từ', m: 'Cái gì', ex: '무엇을 합니까? (Làm cái gì?)' },
+            { w: '어디', p: 'eo-di', t: 'Đại từ', m: 'Đâu', ex: '어디에 갑니까? (Đi đâu?)' },
+            { w: '누구', p: 'nu-gu', t: 'Đại từ', m: 'Ai', ex: '누구를 만납니까? (Gặp ai?)' },
+            { w: '언제', p: 'eon-je', t: 'Đại từ', m: 'Khi nào', ex: '언제 밥을 먹습니까? (Khi nào ăn cơm?)' },
+
+            // 5. Từ mới
+            { w: '공원', p: 'gong-won', t: 'Danh từ', m: 'Công viên', ex: '공원에서 산책합니다.' },
+            { w: '시장', p: 'si-jang', t: 'Danh từ', m: 'Chợ', ex: '시장에 갑니다.' },
+            { w: '노래', p: 'no-rae', t: 'Danh từ', m: 'Bài hát', ex: '노래를 듣습니다.' },
+            { w: '식사하다', p: 'sik-sa-ha-da', t: 'Động từ', m: 'Dùng bữa', ex: '식당에서 식사합니다.' },
+            { w: '대한빌딩', p: 'Dae-han-bil-ding', t: 'Danh từ', m: 'Tòa nhà Daehan', ex: '여기는 대한빌딩입니다.' },
+            { w: '아이스크림', p: 'a-i-seu-keu-rim', t: 'Danh từ', m: 'Kem', ex: '아이스크림을 먹습니다.' },
+            { w: '방', p: 'bang', t: 'Danh từ', m: 'Phòng', ex: '방이 큽니다.' },
+            { w: '사과', p: 'sa-gwa', t: 'Danh từ', m: 'Táo', ex: '사과가 맛있습니다.' },
+            { w: '산책하다', p: 'san-chaek-ha-da', t: 'Động từ', m: 'Đi dạo', ex: '공원을 산책합니다.' },
+            { w: '쇼핑하다', p: 'syo-ping-ha-da', t: 'Động từ', m: 'Mua sắm', ex: '백화점에서 쇼핑합니다.' },
+            { w: '아주', p: 'a-ju', t: 'Phó từ', m: 'Rất', ex: '아주 좋습니다.' },
+            { w: '여행', p: 'yeo-haeng', t: 'Danh từ', m: 'Du lịch', ex: '여행을 좋아합니다.' },
+            { w: '옷', p: 'ot', t: 'Danh từ', m: 'Áo, quần áo', ex: '옷을 삽니다.' },
+            { w: '시내', p: 'si-nae', t: 'Danh từ', m: 'Trung tâm thành phố', ex: '시내에 갑니다.' },
+            { w: '이메일', p: 'i-me-il', t: 'Danh từ', m: 'Email', ex: '이메일을 읽습니다.' },
+            { w: '위', p: 'wi', t: 'Danh từ', m: 'Trên', ex: '책상 위에 있습니다.' },
+            { w: '자주', p: 'ja-ju', t: 'Phó từ', m: 'Thường xuyên', ex: '자주 만납니다.' },
+            { w: '전화하다', p: 'jeon-hwa-ha-da', t: 'Động từ', m: 'Gọi điện thoại', ex: '친구에게 전화합니다.' },
+            { w: '지금', p: 'ji-geum', t: 'Danh từ/Phó từ', m: 'Bây giờ', ex: '지금 무엇을 합니까?' },
+            { w: '축구를 하다', p: 'chuk-gu-reul ha-da', t: 'Động từ', m: 'Đá bóng', ex: '운동장에서 축구를 합니다.' },
+            { w: '카페', p: 'ka-pe', t: 'Danh từ', m: 'Quán cà phê', ex: '카페에서 차를 마십니다.' },
+            { w: '헬스클럽', p: 'hel-seu-keul-leop', t: 'Danh từ', m: 'Câu lạc bộ thể dục', ex: '헬스클럽에서 운동합니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-pink-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-pink-100">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

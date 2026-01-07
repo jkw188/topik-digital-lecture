@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2: Trường học</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#10b981' } /* Emerald Green Theme */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-house text-lg"></i> Trang chủ
+            </a>
+            <h1 class="font-bold text-lg text-slate-800 truncate px-4">Bài 2: Trường học</h1>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        <div class="bg-theme rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold mb-2">Từ vựng Bài 2</h2>
+                <p class="text-emerald-100 opacity-90">Chủ đề: Nơi chốn, Trang thiết bị & Đồ vật trong lớp học.</p>
+            </div>
+            <i class="ph-fill ph-backpack absolute right-0 bottom-0 text-9xl text-emerald-800 opacity-20 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Nơi chốn
+            { w: '학교', p: 'hak-gyo', t: 'Danh từ', m: 'Trường học', ex: '학교에 갑니다. (Tôi đi đến trường)' },
+            { w: '도서관', p: 'do-seo-gwan', t: 'Danh từ', m: 'Thư viện', ex: '도서관에서 책을 읽습니다.' },
+            { w: '식당', p: 'sik-dang', t: 'Danh từ', m: 'Nhà ăn / Nhà hàng', ex: '식당에서 밥을 먹습니다.' },
+            { w: '호텔', p: 'ho-tel', t: 'Danh từ', m: 'Khách sạn', ex: '호텔이 큽니다.' },
+            { w: '극장', p: 'geuk-jang', t: 'Danh từ', m: 'Rạp hát / Rạp phim', ex: '극장에서 영화를 봅니다.' },
+            { w: '우체국', p: 'u-che-guk', t: 'Danh từ', m: 'Bưu điện', ex: '우체국에 갑니다.' },
+            { w: '병원', p: 'byeong-won', t: 'Danh từ', m: 'Bệnh viện', ex: '병원이 어디입니까?' },
+            { w: '은행', p: 'eun-haeng', t: 'Danh từ', m: 'Ngân hàng', ex: '은행에서 일합니다.' },
+            { w: '백화점', p: 'baek-hwa-jeom', t: 'Danh từ', m: 'Cửa hàng bách hóa', ex: '백화점에서 옷을 삽니다.' },
+            { w: '약국', p: 'yak-guk', t: 'Danh từ', m: 'Hiệu thuốc', ex: '약국에서 약을 삽니다.' },
+            { w: '가게', p: 'ga-ge', t: 'Danh từ', m: 'Cửa tiệm / Cửa hàng', ex: '가게에 과자가 많습니다.' },
+            { w: '사무실', p: 'sa-mu-sil', t: 'Danh từ', m: 'Văn phòng', ex: '사무실이 깨끗합니다.' },
+
+            // 2. Trang thiết bị trường học
+            { w: '강의실', p: 'gang-ui-sil', t: 'Danh từ', m: 'Giảng đường', ex: '강의실에서 공부합니다.' },
+            { w: '교실', p: 'gyo-sil', t: 'Danh từ', m: 'Phòng học', ex: '교실에 학생이 있습니다.' },
+            { w: '화장실', p: 'hwa-jang-sil', t: 'Danh từ', m: 'Phòng vệ sinh', ex: '화장실이 어디에 있습니까?' },
+            { w: '휴게실', p: 'hyu-ge-sil', t: 'Danh từ', m: 'Phòng nghỉ', ex: '휴게실에서 쉽니다.' },
+            { w: '랩실', p: 'raep-sil', t: 'Danh từ', m: 'Phòng Lab (Phòng máy)', ex: '랩실에 컴퓨터가 있습니다.' },
+            { w: '동아리방', p: 'dong-a-ri-bang', t: 'Danh từ', m: 'Phòng CLB', ex: '동아리방에서 친구를 만납니다.' },
+            { w: '체육관', p: 'che-yuk-gwan', t: 'Danh từ', m: 'Nhà thi đấu', ex: '체육관에서 운동합니다.' },
+            { w: '운동장', p: 'un-dong-jang', t: 'Danh từ', m: 'Sân vận động', ex: '운동장이 넓습니다.' },
+            { w: '강당', p: 'gang-dang', t: 'Danh từ', m: 'Hội trường', ex: '강당에서 행사가 있습니다.' },
+            { w: '학생 식당', p: 'hak-saeng sik-dang', t: 'Danh từ', m: 'Nhà ăn học sinh', ex: '학생 식당 밥이 맛있습니다.' },
+            { w: '세미나실', p: 'se-mi-na-sil', t: 'Danh từ', m: 'Phòng hội thảo', ex: '세미나실에서 회의를 합니다.' },
+            { w: '서점', p: 'seo-jeom', t: 'Danh từ', m: 'Hiệu sách', ex: '서점에서 책을 삽니다.' },
+
+            // 3. Đồ vật trong phòng học
+            { w: '책상', p: 'chaek-sang', t: 'Danh từ', m: 'Cái bàn', ex: '책상 위에 책이 있습니다.' },
+            { w: '의자', p: 'ui-ja', t: 'Danh từ', m: 'Cái ghế', ex: '의자에 앉으세요.' },
+            { w: '칠판', p: 'chil-pan', t: 'Danh từ', m: 'Cái bảng', ex: '칠판을 지웁니다.' },
+            { w: '문', p: 'mun', t: 'Danh từ', m: 'Cửa', ex: '문을 닫으세요.' },
+            { w: '창문', p: 'chang-mun', t: 'Danh từ', m: 'Cửa sổ', ex: '창문을 여세요.' },
+            { w: '시계', p: 'si-gye', t: 'Danh từ', m: 'Đồng hồ', ex: '시계가 예쁩니다.' },
+            { w: '가방', p: 'ga-bang', t: 'Danh từ', m: 'Cặp sách', ex: '가방 안에 책이 있습니다.' },
+            { w: '컴퓨터', p: 'keom-pyu-teo', t: 'Danh từ', m: 'Máy vi tính', ex: '컴퓨터로 숙제를 합니다.' },
+            { w: '책', p: 'chaek', t: 'Danh từ', m: 'Sách', ex: '책을 읽습니다.' },
+            { w: '공책', p: 'gong-chaek', t: 'Danh từ', m: 'Vở', ex: '공책에 씁니다.' },
+            { w: '사전', p: 'sa-jeon', t: 'Danh từ', m: 'Từ điển', ex: '사전을 찾습니다.' },
+            { w: '지우개', p: 'ji-u-gae', t: 'Danh từ', m: 'Cục tẩy', ex: '지우개가 필요합니다.' },
+            { w: '지도', p: 'ji-do', t: 'Danh từ', m: 'Bản đồ', ex: '지도를 봅니다.' },
+            { w: '펜', p: 'pen', t: 'Danh từ', m: 'Bút', ex: '펜으로 씁니다.' },
+            { w: '필통', p: 'pil-tong', t: 'Danh từ', m: 'Hộp bút', ex: '필통에 연필이 있습니다.' },
+
+            // 4. Từ mới khác
+            { w: '거기', p: 'geo-gi', t: 'Đại từ', m: 'Ở đó (gần người nghe)', ex: '거기는 도서관입니까?' },
+            { w: '저기', p: 'jeo-gi', t: 'Đại từ', m: 'Ở kia (xa cả hai)', ex: '저기는 식당입니다.' },
+            { w: '여기', p: 'yeo-gi', t: 'Đại từ', m: 'Ở đây', ex: '여기는 학교입니다.' },
+            { w: '이것', p: 'i-geot', t: 'Đại từ', m: 'Cái này', ex: '이것은 책입니다.' },
+            { w: '그것', p: 'geu-geot', t: 'Đại từ', m: 'Cái đó', ex: '그것은 무엇입니까?' },
+            { w: '저것', p: 'jeo-geot', t: 'Đại từ', m: 'Cái kia', ex: '저것은 시계입니다.' },
+            { w: '라디오', p: 'ra-di-o', t: 'Danh từ', m: 'Đài Radio', ex: '라디오를 듣습니다.' },
+            { w: '많이', p: 'man-i', t: 'Phó từ', m: 'Nhiều', ex: '학생이 많이 있습니다.' },
+            { w: '명동', p: 'Myeong-dong', t: 'Danh từ', m: 'Khu Myeong-dong', ex: '명동에 사람이 많습니다.' },
+            { w: '무엇', p: 'mu-eot', t: 'Đại từ', m: 'Cái gì', ex: '이것은 무엇입니까?' },
+            { w: '어디', p: 'eo-di', t: 'Đại từ', m: 'Ở đâu', ex: '여기는 어디입니까?' },
+            { w: '없다', p: 'eop-da', t: 'Tính từ', m: 'Không có', ex: '시계가 없습니다.' },
+            { w: '있다', p: 'it-da', t: 'Tính từ', m: 'Có', ex: '책이 있습니다.' },
+            { w: '텔레비전', p: 'tel-le-bi-jeon', t: 'Danh từ', m: 'Ti vi', ex: '텔레비전을 봅니다.' },
+            { w: '휴대전화', p: 'hyu-dae-jeon-hwa', t: 'Danh từ', m: 'Điện thoại di động', ex: '휴대전화가 있습니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-emerald-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-emerald-100">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

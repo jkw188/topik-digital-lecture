@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1: Quốc gia & Nghề nghiệp</title>
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        korean: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: { primary: '#6366f1' }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        /* Table styles */
+        .korean-text { font-family: 'Noto Sans KR', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors font-bold text-sm">
+                <i class="ph-bold ph-house text-lg"></i>
+                Trang chủ
+            </a>
+            <h1 class="font-bold text-lg text-slate-800 truncate px-4">Bài 1: Quốc gia & Nghề nghiệp</h1>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 từ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Intro Card -->
+        <div class="bg-indigo-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold mb-2">Từ vựng Bài 1</h2>
+                <p class="text-indigo-100 opacity-90">Chủ đề: Quốc gia, Nghề nghiệp, Chào hỏi và các từ mới liên quan.</p>
+            </div>
+            <i class="ph-fill ph-globe-hemisphere-east absolute right-0 bottom-0 text-9xl text-indigo-500 opacity-50 transform translate-x-10 translate-y-10"></i>
+        </div>
+
+        <!-- Filter/Search (Optional Future Feature) -->
+        <!-- <div class="mb-4"><input type="text" placeholder="Tìm kiếm từ vựng..." class="w-full p-3 rounded-xl border border-slate-200"></div> -->
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase tracking-wider w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-indigo-600 uppercase tracking-wider w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase tracking-wider w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase tracking-wider w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase tracking-wider w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase tracking-wider min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100">
+                        <!-- Javascript will load data here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-8 py-8">
+        <div class="text-center text-slate-400 text-sm">
+            Học tiếng Hàn mỗi ngày cùng HanBook
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button onclick="window.scrollTo(0,0)" class="fixed bottom-8 right-8 bg-indigo-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-700 transition-all z-40">
+        <i class="ph-bold ph-arrow-up"></i>
+    </button>
+
+    <!-- DATA & LOGIC -->
+    <script>
+        // Dữ liệu từ vựng (Bạn có thể chỉnh sửa trực tiếp tại đây)
+        const vocabularyList = [
+            // 1. Quốc gia
+            { w: '한국', p: 'hangug', t: 'Danh từ', m: 'Hàn Quốc', ex: '저는 한국 사람입니다.' },
+            { w: '미국', p: 'migug', t: 'Danh từ', m: 'Mỹ', ex: '미국에서 왔습니다.' },
+            { w: '몽골', p: 'mong-gol', t: 'Danh từ', m: 'Mông Cổ', ex: '몽골 학생입니다.' },
+            { w: '영국', p: 'yeong-gug', t: 'Danh từ', m: 'Anh', ex: '영국에 가고 싶어요.' },
+            { w: '베트남', p: 'beteunam', t: 'Danh từ', m: 'Việt Nam', ex: '베트남 쌀국수가 맛있어요.' },
+            { w: '중국', p: 'jung-gug', t: 'Danh từ', m: 'Trung Quốc', ex: '중국 친구가 있습니다.' },
+            { w: '인도네시아', p: 'indonesia', t: 'Danh từ', m: 'Indonesia', ex: '인도네시아어 공부해요.' },
+            { w: '독일', p: 'dog-il', t: 'Danh từ', m: 'Đức', ex: '독일 자동차가 좋습니다.' },
+            { w: '말레이시아', p: 'malleisia', t: 'Danh từ', m: 'Malaysia', ex: '말레이시아 여행을 가요.' },
+            { w: '태국', p: 'taegug', t: 'Danh từ', m: 'Thái Lan', ex: '태국 음식을 좋아해요.' },
+            { w: '필리핀', p: 'pillipin', t: 'Danh từ', m: 'Philipin', ex: '필리핀에 친구가 있어요.' },
+            { w: '프랑스', p: 'peulangseu', t: 'Danh từ', m: 'Pháp', ex: '프랑스 파리에 가요.' },
+            { w: '일본', p: 'ilbon', t: 'Danh từ', m: 'Nhật Bản', ex: '일본어를 배웁니다.' },
+            { w: '호주', p: 'hoju', t: 'Danh từ', m: 'Úc', ex: '호주에 살아요.' },
+            { w: '러시아', p: 'leosia', t: 'Danh từ', m: 'Nga', ex: '러시아는 춥습니다.' },
+            { w: '인도', p: 'indo', t: 'Danh từ', m: 'Ấn Độ', ex: '인도 영화를 봐요.' },
+
+            // 2. Nghề nghiệp
+            { w: '학생', p: 'hagsaeng', t: 'Danh từ', m: 'Học sinh', ex: '저는 학생입니다.' },
+            { w: '의사', p: 'uisa', t: 'Danh từ', m: 'Bác sĩ', ex: '의사가 친절합니다.' },
+            { w: '약사', p: 'yagsa', t: 'Danh từ', m: 'Dược sĩ', ex: '약사가 약을 줍니다.' },
+            { w: '회사원', p: 'hoesawon', t: 'Danh từ', m: 'Nhân viên công ty', ex: '우리 형은 회사원입니다.' },
+            { w: '공무원', p: 'gongmuwon', t: 'Danh từ', m: 'Công chức', ex: '아버지는 공무원입니다.' },
+            { w: '운전기사', p: 'unjeongisa', t: 'Danh từ', m: 'Lái xe', ex: '택시 운전기사님.' },
+            { w: '관광가이드', p: 'gwangwang-gaideu', t: 'Danh từ', m: 'Hướng dẫn viên du lịch', ex: '관광가이드가 설명합니다.' },
+            { w: '주부', p: 'jubu', t: 'Danh từ', m: 'Nội trợ', ex: '어머니는 주부입니다.' },
+            { w: '교사', p: 'gyosa', t: 'Danh từ', m: 'Giáo viên', ex: '학교 교사입니다.' },
+            { w: '은행원', p: 'eunhaeng-won', t: 'Danh từ', m: 'Nhân viên ngân hàng', ex: '은행원이 돈을 셉니다.' },
+
+            // 3. Từ mới
+            { w: '국어국문학과', p: 'gug-eogugmunhaggwa', t: 'Danh từ', m: 'Khoa ngữ văn', ex: '국어국문학과 학생입니다.' },
+            { w: '국적', p: 'gugjeog', t: 'Danh từ', m: 'Quốc tịch', ex: '국적이 어디입니까?' },
+            { w: '네', p: 'ne', t: 'Thán từ', m: 'Vâng', ex: '네, 알겠습니다.' },
+            { w: '대학교', p: 'daehaggyo', t: 'Danh từ', m: 'Trường đại học', ex: '대학교가 큽니다.' },
+            { w: '대학생', p: 'daehagsaeng', t: 'Danh từ', m: 'Sinh viên', ex: '저는 대학생입니다.' },
+            { w: '분', p: 'bun', t: 'Danh từ (Kính ngữ)', m: 'Người, vị', ex: '저 분은 누구입니까?' },
+            { w: '보기', p: 'bogi', t: 'Danh từ', m: 'Mẫu, ví dụ', ex: '보기를 보세요.' },
+            { w: '사람', p: 'salam', t: 'Danh từ', m: 'Người', ex: '베트남 사람입니다.' },
+            { w: '씨', p: 'ssi', t: 'Hậu tố', m: 'Bạn, cô, anh', ex: '민수 씨, 안녕하세요.' },
+            { w: '아니요', p: 'aniyo', t: 'Thán từ', m: 'Không', ex: '아니요, 아닙니다.' },
+            { w: '은행', p: 'eunhaeng', t: 'Danh từ', m: 'Ngân hàng', ex: '은행에 갑니다.' },
+            { w: '이', p: 'i', t: 'Đại từ', m: 'Này', ex: '이 책 (Quyển sách này)' },
+            { w: '이름', p: 'ileum', t: 'Danh từ', m: 'Tên', ex: '이름이 무엇입니까?' },
+            { w: '이메일', p: 'imeil', t: 'Danh từ', m: 'Email', ex: '이메일을 보냅니다.' },
+            { w: '저', p: 'jeo', t: 'Đại từ', m: 'Tôi (khiêm tốn)', ex: '저는 란입니다.' },
+            { w: '전화', p: 'jeonhwa', t: 'Danh từ', m: 'Điện thoại', ex: '전화를 받으세요.' },
+            { w: '제', p: 'je', t: 'Đại từ', m: 'Của tôi', ex: '제 친구입니다.' },
+            { w: '주소', p: 'juso', t: 'Danh từ', m: 'Địa chỉ', ex: '주소가 어디입니까?' },
+            { w: '직업', p: 'jig-eob', t: 'Danh từ', m: 'Nghề nghiệp', ex: '직업이 무엇입니까?' },
+            { w: '학과', p: 'haggwa', t: 'Danh từ', m: 'Khoa/bộ môn', ex: '한국어 학과입니다.' },
+            { w: '학번', p: 'hagbeon', t: 'Danh từ', m: 'Mã số sinh viên', ex: '학번을 쓰세요.' },
+            { w: '학생증', p: 'hagsaengjeung', t: 'Danh từ', m: 'Thẻ sinh viên', ex: '학생증이 있습니다.' },
+            { w: '한국어', p: 'hangug-eo', t: 'Danh từ', m: 'Tiếng Hàn', ex: '한국어를 공부합니다.' },
+            { w: '한국어과', p: 'hangug-eogwa', t: 'Danh từ', m: 'Khoa tiếng Hàn', ex: '한국어과에 다닙니다.' },
+
+            // 4. Chào hỏi
+            { w: '안녕하세요?', p: 'Annyeonghaseyo?', t: 'Câu', m: 'Xin chào', ex: '선생님, 안녕하세요?' },
+            { w: '안녕하십니까?', p: 'Annyeonghasibnikka?', t: 'Câu', m: 'Xin chào (Trang trọng)', ex: '사장님, 안녕하십니까?' },
+            { w: '안녕히 가세요', p: 'Annyeonghi gaseyo', t: 'Câu', m: 'Tạm biệt (chúc đi)', ex: '안녕히 가세요, 내일 봐요.' },
+            { w: '안녕히 계세요', p: 'Annyeonghi gyeseyo', t: 'Câu', m: 'Tạm biệt (chúc ở lại)', ex: '안녕히 계세요, 선생님.' },
+            { w: '처음 뵙겠습니다', p: 'Cheoeum boebgessseubnida', t: 'Câu', m: 'Hân hạnh gặp mặt', ex: '처음 뵙겠습니다, 저는 킴입니다.' },
+            { w: '반갑습니다', p: 'Bangabseubnida', t: 'Câu', m: 'Rất vui được gặp', ex: '만나서 반갑습니다.' },
+        ];
+
+        // Hàm render dữ liệu ra bảng
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                const pron = item.p ? `<span class="text-slate-500 font-medium font-mono text-xs">[${item.p}]</span>` : '<span class="text-slate-300">--</span>';
+                
+                html += `
+                <tr class="hover:bg-indigo-50/40 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4">
+                        <span class="korean-text text-lg font-bold text-slate-700 group-hover:text-indigo-700 transition-colors">${item.w}</span>
+                    </td>
+                    <td class="p-4">${pron}</td>
+                    <td class="p-4">
+                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold border border-slate-200 uppercase tracking-wide">
+                            ${item.t}
+                        </span>
+                    </td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4">
+                        <div class="text-sm text-slate-600 bg-slate-50 p-2 rounded border border-slate-100 italic group-hover:bg-white group-hover:border-indigo-100 transition-colors">
+                            ${item.ex}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Chạy hàm khi tải trang
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

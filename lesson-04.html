@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 4: Ngày và Thứ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#ea580c' } /* Orange Theme */
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-house text-lg"></i> Trang chủ
+            </a>
+            <h1 class="font-bold text-lg text-slate-800 truncate px-4">Bài 4: Ngày và Thứ</h1>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        <div class="bg-theme rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold mb-2">Từ vựng Bài 4</h2>
+                <p class="text-orange-100 opacity-90">Chủ đề: Ngày tháng, Số đếm Hán Hàn & Lịch trình.</p>
+            </div>
+            <i class="ph-fill ph-calendar-check absolute right-0 bottom-0 text-9xl text-orange-900 opacity-20 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Thứ (Days)
+            { w: '일요일', p: 'il-yo-il', t: 'Danh từ', m: 'Chủ nhật', ex: '일요일에 쉽니다.' },
+            { w: '월요일', p: 'wol-yo-il', t: 'Danh từ', m: 'Thứ hai', ex: '월요일에 학교에 갑니다.' },
+            { w: '화요일', p: 'hwa-yo-il', t: 'Danh từ', m: 'Thứ ba', ex: '화요일에 친구를 만납니다.' },
+            { w: '수요일', p: 'su-yo-il', t: 'Danh từ', m: 'Thứ tư', ex: '수요일에 시험이 있습니다.' },
+            { w: '목요일', p: 'mok-yo-il', t: 'Danh từ', m: 'Thứ năm', ex: '목요일에 운동합니다.' },
+            { w: '금요일', p: 'geum-yo-il', t: 'Danh từ', m: 'Thứ sáu', ex: '금요일에 영화를 봅니다.' },
+            { w: '토요일', p: 'to-yo-il', t: 'Danh từ', m: 'Thứ bảy', ex: '토요일에 쇼핑합니다.' },
+
+            // 2. Tháng (Months)
+            { w: '1월 (일월)', p: 'il-wol', t: 'Danh từ', m: 'Tháng một (giêng)', ex: '1월 1일은 설날입니다.' },
+            { w: '2월 (이월)', p: 'i-wol', t: 'Danh từ', m: 'Tháng hai', ex: '2월에 졸업합니다.' },
+            { w: '3월 (삼월)', p: 'sam-wol', t: 'Danh từ', m: 'Tháng ba', ex: '3월에 학교가 시작합니다.' },
+            { w: '4월 (사월)', p: 'sa-wol', t: 'Danh từ', m: 'Tháng tư', ex: '4월은 봄입니다.' },
+            { w: '5월 (오월)', p: 'o-wol', t: 'Danh từ', m: 'Tháng năm', ex: '5월에 여행을 갑니다.' },
+            { w: '6월 (유월)', p: 'yu-wol', t: 'Danh từ', m: 'Tháng sáu', ex: '6월은 덥습니다.' },
+            { w: '7월 (칠월)', p: 'chil-wol', t: 'Danh từ', m: 'Tháng bảy', ex: '7월에 방학입니다.' },
+            { w: '8월 (팔월)', p: 'pal-wol', t: 'Danh từ', m: 'Tháng tám', ex: '8월에 휴가를 갑니다.' },
+            { w: '9월 (구월)', p: 'gu-wol', t: 'Danh từ', m: 'Tháng chín', ex: '9월은 가을입니다.' },
+            { w: '10월 (시월)', p: 'si-wol', t: 'Danh từ', m: 'Tháng mười', ex: '10월에 시험을 봅니다.' },
+            { w: '11월 (십일월)', p: 'sib-il-wol', t: 'Danh từ', m: 'Tháng mười một', ex: '11월은 쌀쌀합니다.' },
+            { w: '12월 (십이월)', p: 'sib-i-wol', t: 'Danh từ', m: 'Tháng mười hai', ex: '12월에 크리스마스가 있습니다.' },
+
+            // 3. Từ vựng thời gian
+            { w: '년', p: 'nyeon', t: 'Danh từ', m: 'Năm', ex: '2024년입니다.' },
+            { w: '월', p: 'wol', t: 'Danh từ', m: 'Tháng', ex: '몇 월입니까?' },
+            { w: '일', p: 'il', t: 'Danh từ', m: 'Ngày', ex: '며칠입니까?' },
+            { w: '시', p: 'si', t: 'Danh từ', m: 'Giờ', ex: '몇 시입니까?' },
+            { w: '그저께', p: 'geu-jeo-kke', t: 'Danh từ', m: 'Hôm kia', ex: '그저께 친구를 만났습니다.' },
+            { w: '어제', p: 'eo-je', t: 'Danh từ', m: 'Hôm qua', ex: '어제 학교에 안 갔습니다.' },
+            { w: '오늘', p: 'o-neul', t: 'Danh từ', m: 'Hôm nay', ex: '오늘 날씨가 좋습니다.' },
+            { w: '내일', p: 'nae-il', t: 'Danh từ', m: 'Ngày mai', ex: '내일 만납시다.' },
+            { w: '모레', p: 'mo-re', t: 'Danh từ', m: 'Ngày kia', ex: '모레 시험이 있습니다.' },
+            { w: '지난해(작년)', p: 'ji-nan-hae', t: 'Danh từ', m: 'Năm ngoái', ex: '지난해에 한국에 갔습니다.' },
+            { w: '올해(금년)', p: 'ol-hae', t: 'Danh từ', m: 'Năm nay', ex: '올해 졸업합니다.' },
+            { w: '다음 해(내년)', p: 'da-eum hae', t: 'Danh từ', m: 'Năm sau', ex: '내년에 대학생이 됩니다.' },
+            { w: '지난달', p: 'ji-nan-dal', t: 'Danh từ', m: 'Tháng trước', ex: '지난달에 바빴습니다.' },
+            { w: '이번 달', p: 'i-beon dal', t: 'Danh từ', m: 'Tháng này', ex: '이번 달은 1월입니다.' },
+            { w: '다음 달', p: 'da-eum dal', t: 'Danh từ', m: 'Tháng sau', ex: '다음 달에 여행 갑니다.' },
+            { w: '지난주', p: 'ji-nan-ju', t: 'Danh từ', m: 'Tuần trước', ex: '지난주에 아팠습니다.' },
+            { w: '이번 주', p: 'i-beon ju', t: 'Danh từ', m: 'Tuần này', ex: '이번 주말에 쉽니다.' },
+            { w: '다음 주', p: 'da-eum ju', t: 'Danh từ', m: 'Tuần sau', ex: '다음 주에 시험입니다.' },
+            { w: '평일(주중)', p: 'pyeong-il', t: 'Danh từ', m: 'Ngày thường', ex: '평일에 일합니다.' },
+            { w: '주말', p: 'ju-mal', t: 'Danh từ', m: 'Cuối tuần', ex: '주말에 등산합니다.' },
+
+            // 4. Số từ Hán Hàn
+            { w: '영/공', p: 'yeong/gong', t: 'Số từ', m: 'Số 0', ex: '공일공 (010)' },
+            { w: '일', p: 'il', t: 'Số từ', m: 'Số 1', ex: '일 층 (Tầng 1)' },
+            { w: '이', p: 'i', t: 'Số từ', m: 'Số 2', ex: '이 학년 (Năm 2)' },
+            { w: '삼', p: 'sam', t: 'Số từ', m: 'Số 3', ex: '삼 월 (Tháng 3)' },
+            { w: '사', p: 'sa', t: 'Số từ', m: 'Số 4', ex: '사 호선 (Tàu điện số 4)' },
+            { w: '오', p: 'o', t: 'Số từ', m: 'Số 5', ex: '오 층 (Tầng 5)' },
+            { w: '육', p: 'yuk', t: 'Số từ', m: 'Số 6', ex: '육 개월 (6 tháng)' },
+            { w: '칠', p: 'chil', t: 'Số từ', m: 'Số 7', ex: '칠 월 (Tháng 7)' },
+            { w: '팔', p: 'pal', t: 'Số từ', m: 'Số 8', ex: '팔 층 (Tầng 8)' },
+            { w: '구', p: 'gu', t: 'Số từ', m: 'Số 9', ex: '구 월 (Tháng 9)' },
+            { w: '십', p: 'sip', t: 'Số từ', m: 'Số 10', ex: '십 분 (10 phút)' },
+            { w: '백', p: 'baek', t: 'Số từ', m: '100', ex: '백 원 (100 won)' },
+            { w: '천', p: 'cheon', t: 'Số từ', m: '1,000', ex: '천 원 (1000 won)' },
+            { w: '만', p: 'man', t: 'Số từ', m: '10,000', ex: '만 원 (10,000 won)' },
+            { w: '십만', p: 'sim-man', t: 'Số từ', m: '100,000', ex: '십만 원' },
+            { w: '백만', p: 'baeng-man', t: 'Số từ', m: '1,000,000', ex: '백만 원' },
+
+            // 5. Từ mới
+            { w: '강사', p: 'gang-sa', t: 'Danh từ', m: 'Giảng viên', ex: '강사님이 설명합니다.' },
+            { w: '계획표', p: 'gye-hoek-pyo', t: 'Danh từ', m: 'Bảng kế hoạch', ex: '계획표를 만듭니다.' },
+            { w: '구경하다', p: 'gu-gyeong-ha-da', t: 'Động từ', m: 'Ngắm, xem', ex: '시내를 구경합니다.' },
+            { w: '그리고', p: 'geu-ri-go', t: 'Liên từ', m: 'Và', ex: '밥을 먹습니다. 그리고 차를 마십니다.' },
+            { w: '등산', p: 'deung-san', t: 'Danh từ', m: 'Việc leo núi', ex: '주말에 등산을 갑니다.' },
+            { w: '명절', p: 'myeong-jeol', t: 'Danh từ', m: 'Ngày lễ', ex: '설날은 명절입니다.' },
+            { w: '방학', p: 'bang-hak', t: 'Danh từ', m: 'Kỳ nghỉ (học sinh)', ex: '여름 방학입니다.' },
+            { w: '산', p: 'san', t: 'Danh từ', m: 'Núi', ex: '산이 높습니다.' },
+            { w: '설날', p: 'seol-lal', t: 'Danh từ', m: 'Ngày Tết', ex: '설날에 떡국을 먹습니다.' },
+            { w: '숙제', p: 'suk-je', t: 'Danh từ', m: 'Bài tập', ex: '숙제가 어렵습니다.' },
+            { w: '시험', p: 'si-heom', t: 'Danh từ', m: 'Kỳ thi', ex: '시험을 봅니다.' },
+            { w: '아르바이트', p: 'a-reu-ba-i-teu', t: 'Danh từ', m: 'Việc làm thêm', ex: '편의점에서 아르바이트를 합니다.' },
+            { w: '아름답다', p: 'a-reum-dap-da', t: 'Tính từ', m: 'Đẹp', ex: '꽃이 아름답습니다.' },
+            { w: '안내', p: 'an-nae', t: 'Danh từ', m: 'Sự hướng dẫn', ex: '안내를 받습니다.' },
+            { w: '전화번호', p: 'jeon-hwa-beon-ho', t: 'Danh từ', m: 'Số điện thoại', ex: '전화번호가 몇 번입니까?' },
+            { w: '졸업하다', p: 'jol-eop-ha-da', t: 'Động từ', m: 'Tốt nghiệp', ex: '대학교를 졸업합니다.' },
+            { w: '커피숍', p: 'keo-pi-syop', t: 'Danh từ', m: 'Quán cà phê', ex: '커피숍에서 만납니다.' },
+            { w: '크리스마스', p: 'keu-ri-seu-ma-seu', t: 'Danh từ', m: 'Giáng sinh', ex: '크리스마스 선물입니다.' },
+            { w: '파티를 하다', p: 'pa-ti-reul ha-da', t: 'Động từ', m: 'Tổ chức tiệc', ex: '생일 파티를 합니다.' },
+            { w: '한글날', p: 'han-geul-lal', t: 'Danh từ', m: 'Ngày chữ Hangeul', ex: '10월 9일은 한글날입니다.' },
+            { w: '호', p: 'ho', t: 'Danh từ', m: 'Số (phòng)', ex: '302호입니다.' },
+            { w: '회의하다', p: 'hoe-ui-ha-da', t: 'Động từ', m: 'Họp', ex: '지금 회의합니다.' },
+            { w: '휴가', p: 'hyu-ga', t: 'Danh từ', m: 'Kỳ nghỉ', ex: '여름 휴가를 갑니다.' },
+            { w: '생일 파티', p: 'saeng-il pa-ti', t: 'Danh từ', m: 'Tiệc sinh nhật', ex: '생일 파티에 갑니다.' },
+            { w: '층', p: 'cheung', t: 'Danh từ', m: 'Tầng', ex: '2층에 있습니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-orange-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-orange-100">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
