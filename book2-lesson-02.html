@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 2: Hẹn gặp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#8b5cf6' } /* Violet Theme for Book 2 */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 2: Hẹn gặp (약속)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 2</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Hẹn gặp</h2>
+                <p class="text-violet-100 opacity-90 max-w-lg">Từ vựng về việc hứa hẹn, giữ lời hứa và các địa điểm gặp gỡ phổ biến.</p>
+            </div>
+            <i class="ph-fill ph-calendar-check absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Danh sách từ vựng CHUẨN XÁC theo file PDF Lesson 2 (Sơ cấp 2)
+        const vocabularyList = [
+            // --- 1. TỪ VỰNG CƠ BẢN (TRANG 38) ---
+            
+            // Hứa hẹn (Appointment/Promise)
+            { w: '약속하다', p: 'yak-sok-ha-da', t: 'Động từ', m: 'Hứa hẹn', ex: '친구와 약속했습니다.' },
+            { w: '약속을 지키다', p: 'yak-so-geul ji-ki-da', t: 'Cụm từ', m: 'Giữ lời hứa', ex: '약속을 꼭 지키세요.' },
+            { w: '약속을 안 지키다', p: 'yak-so-geul an ji-ki-da', t: 'Cụm từ', m: 'Không giữ lời hứa (cố ý)', ex: '그 사람은 약속을 안 지켰습니다.' },
+            { w: '약속을 못 지키다', p: 'yak-so-geul mot ji-ki-da', t: 'Cụm từ', m: 'Không giữ được lời hứa (bất khả kháng)', ex: '바빠서 약속을 못 지켰습니다.' },
+            { w: '약속을 취소하다', p: 'yak-so-geul chwi-so-ha-da', t: 'Cụm từ', m: 'Hủy cuộc hẹn', ex: '일이 있어서 약속을 취소했습니다.' },
+            { w: '약속을 바꾸다', p: 'yak-so-geul ba-kku-da', t: 'Cụm từ', m: 'Thay đổi cuộc hẹn', ex: '시간이 없어서 약속을 바꿨습니다.' },
+            { w: '기다리다', p: 'gi-da-ri-da', t: 'Động từ', m: 'Chờ, chờ đợi', ex: '친구를 기다립니다.' },
+            { w: '만나다', p: 'man-na-da', t: 'Động từ', m: 'Gặp', ex: '극장에서 만납시다.' },
+            { w: '헤어지다', p: 'he-eo-ji-da', t: 'Động từ', m: 'Chia tay', ex: '우리는 역 앞에서 헤어졌습니다.' },
+            { w: '연락하다', p: 'yeol-lak-ha-da', t: 'Động từ', m: 'Liên lạc', ex: '도착하면 연락하세요.' },
+
+            // Địa điểm (Places)
+            { w: '커피숍', p: 'keo-pi-syop', t: 'Danh từ', m: 'Quán cà phê', ex: '커피숍에서 차를 마십니다.' },
+            { w: '박물관', p: 'bang-mul-gwan', t: 'Danh từ', m: 'Viện bảo tàng', ex: '박물관을 관람합니다.' },
+            { w: '미술관', p: 'mi-sul-gwan', t: 'Danh từ', m: 'Bảo tàng mỹ thuật', ex: '미술관에 그림이 많습니다.' },
+            { w: '만남의 광장', p: 'man-na-me gwang-jang', t: 'Danh từ', m: 'Quảng trường gặp gỡ', ex: '만남의 광장에서 기다리세요.' },
+            { w: '호텔', p: 'ho-tel', t: 'Danh từ', m: 'Khách sạn', ex: '호텔 로비에 있습니다.' },
+            { w: '백화점', p: 'baek-hwa-jeom', t: 'Danh từ', m: 'Trung tâm mua sắm cao cấp', ex: '백화점에서 쇼핑합니다.' },
+            { w: '안내 데스크', p: 'an-nae de-seu-keu', t: 'Danh từ', m: 'Bàn hướng dẫn', ex: '안내 데스크에 물어보세요.' },
+            { w: '정류장', p: 'jeong-nyu-jang', t: 'Danh từ', m: 'Trạm dừng xe buýt', ex: '버스 정류장이 가깝습니다.' },
+            { w: '쇼핑몰', p: 'syo-ping-mol', t: 'Danh từ', m: 'Khu mua sắm', ex: '쇼핑몰이 큽니다.' },
+
+            // --- 2. TỪ MỚI (TRANG 56 - CUỐI BÀI) ---
+            
+            { w: '(손을) 대다', p: 'so-neul dae-da', t: 'Động từ', m: 'Chạm (tay) vào', ex: '그림에 손을 대지 마세요.' },
+            { w: '감기', p: 'gam-gi', t: 'Danh từ', m: 'Cảm', ex: '감기에 걸렸습니다.' },
+            { w: '갑자기', p: 'gap-ja-gi', t: 'Phó từ', m: 'Đột nhiên', ex: '갑자기 비가 옵니다.' },
+            { w: '고치다', p: 'go-chi-da', t: 'Động từ', m: 'Sửa, chữa', ex: '컴퓨터를 고칩니다.' },
+            { w: '과 사무실', p: 'gwa sa-mu-sil', t: 'Danh từ', m: 'Văn phòng khoa', ex: '과 사무실에 가세요.' },
+            { w: '광장', p: 'gwang-jang', t: 'Danh từ', m: 'Quảng trường', ex: '광장에 사람이 많습니다.' },
+            { w: '길', p: 'gil', t: 'Danh từ', m: 'Con đường', ex: '길이 막힙니다.' },
+            { w: '나가다', p: 'na-ga-da', t: 'Động từ', m: 'Đi ra (đón)', ex: '마중을 나갑니다.' },
+            { w: '나오다', p: 'na-o-da', t: 'Động từ', m: 'Đi ra (đón)', ex: '공항에 마중을 나옵니다.' },
+            { w: '논문', p: 'non-mun', t: 'Danh từ', m: 'Luận văn, báo cáo khoa học', ex: '논문을 씁니다.' },
+            { w: '늦다', p: 'neut-da', t: 'Tính từ', m: 'Chậm, muộn', ex: '시간이 늦었습니다.' },
+            { w: '늦잠', p: 'neut-jam', t: 'Danh từ', m: 'Ngủ dậy muộn', ex: '늦잠을 잤습니다.' },
+            { w: '담배', p: 'dam-bae', t: 'Danh từ', m: 'Thuốc lá', ex: '담배를 피우지 마세요.' },
+            { w: '등산화', p: 'deung-san-hwa', t: 'Danh từ', m: 'Giày leo núi', ex: '등산화를 신습니다.' },
+            { w: '떠들다', p: 'tteo-deul-da', t: 'Động từ', m: 'Làm ầm ĩ, làm ồn', ex: '도서관에서 떠들면 안 됩니다.' },
+            { w: '라이터', p: 'ra-i-teo', t: 'Danh từ', m: 'Cái bật lửa', ex: '라이터가 있습니까?' },
+            { w: '문제가 있다', p: 'mun-je-ga it-da', t: 'Cụm từ', m: 'Có vấn đề', ex: '컴퓨터에 문제가 있습니다.' },
+            { w: '물세탁', p: 'mul-se-tak', t: 'Danh từ', m: 'Giặt bằng nước', ex: '물세탁을 하지 마세요.' },
+            { w: '바뀌다', p: 'ba-kkwi-da', t: 'Động từ', m: 'Bị thay đổi, được thay đổi', ex: '약속 장소가 바뀌었습니다.' },
+            { w: '변경', p: 'byeon-gyeong', t: 'Danh từ', m: 'Sự thay đổi', ex: '날짜 변경이 가능합니까?' },
+            { w: '뷔페', p: 'bwi-pe', t: 'Danh từ', m: 'Ăn tự chọn (Buffet)', ex: '뷔페 식당에 갑니다.' },
+            { w: '빠지다', p: 'ppa-ji-da', t: 'Động từ', m: 'Sót, thiếu, rơi vào', ex: '한 사람도 빠지지 마세요.' },
+            { w: '알다', p: 'al-da', t: 'Động từ', m: 'Biết', ex: '저는 그 사람을 압니다.' },
+            { w: '외출하다', p: 'oe-chul-ha-da', t: 'Động từ', m: 'Đi ra ngoài', ex: '잠시 외출했습니다.' },
+            { w: '유의 사항', p: 'yu-ui sa-hang', t: 'Danh từ', m: 'Điểm cần lưu ý', ex: '유의 사항을 읽어 보세요.' },
+            { w: '잊다', p: 'it-da', t: 'Động từ', m: 'Quên', ex: '약속을 잊지 마세요.' },
+            { w: '절대', p: 'jeol-dae', t: 'Phó từ', m: 'Tuyệt đối', ex: '절대 늦지 마세요.' },
+            { w: '점검하다', p: 'jeom-geom-ha-da', t: 'Động từ', m: 'Kiểm tra', ex: '생활을 점검합니다.' },
+            { w: '정각', p: 'jeong-gak', t: 'Danh từ', m: 'Giờ chính xác (đúng giờ)', ex: '9시 정각에 시작합니다.' },
+            { w: '준비물', p: 'jun-bi-mul', t: 'Danh từ', m: 'Vật chuẩn bị', ex: '준비물을 챙기세요.' },
+            { w: '피우다', p: 'pi-u-da', t: 'Động từ', m: 'Hút (thuốc)', ex: '담배를 피우면 안 됩니다.' },
+            { w: '확인', p: 'hwa-gin', t: 'Danh từ', m: 'Xác nhận', ex: '예약을 확인했습니다.' },
+            { w: '회비', p: 'hoe-bi', t: 'Danh từ', m: 'Hội phí', ex: '회비를 냅니다.' },
+            { w: '회의실', p: 'hoe-ui-sil', t: 'Danh từ', m: 'Phòng họp', ex: '회의실에서 만납시다.' },
+            { w: '휴게실', p: 'hyu-ge-sil', t: 'Danh từ', m: 'Phòng nghỉ', ex: '휴게실에서 쉽니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-violet-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-violet-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
