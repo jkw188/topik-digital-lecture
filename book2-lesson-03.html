@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 3: Mua sắm (2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#db2777' } /* Pink Theme for Book 2 Lesson 3 */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 3: Mua sắm 2 (물건 사기 2)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-pink-600 to-rose-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 3</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Mua sắm (2)</h2>
+                <p class="text-pink-100 opacity-90 max-w-lg">Danh từ đơn vị, từ vựng liên quan đến mua sắm và trạng thái của sự vật.</p>
+            </div>
+            <i class="ph-fill ph-shopping-bag absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Danh sách từ vựng CHUẨN XÁC theo file PDF Lesson 3 (Sơ cấp 2)
+        const vocabularyList = [
+            // --- 1. TỪ VỰNG CƠ BẢN (TRANG 58-59) ---
+            
+            // Danh từ đơn vị (2)
+            { w: '벌', p: 'beol', t: 'Danh từ đơn vị', m: 'Bộ (quần áo)', ex: '옷 한 벌을 샀습니다.' },
+            { w: '켤레', p: 'kyeol-le', t: 'Danh từ đơn vị', m: 'Đôi (giày, tất)', ex: '구두 한 켤레가 필요합니다.' },
+            { w: '쌍', p: 'ssang', t: 'Danh từ đơn vị', m: 'Đôi (khuyên tai, đũa)', ex: '귀걸이 한 쌍을 선물했습니다.' },
+            { w: '장', p: 'jang', t: 'Danh từ đơn vị', m: 'Tờ, trang (giấy, vé)', ex: '종이 한 장 주세요.' },
+            { w: '송이', p: 'song-i', t: 'Danh từ đơn vị', m: 'Đóa, chùm (hoa, nho)', ex: '장미 한 송이가 예쁩니다.' },
+            { w: '바구니', p: 'ba-gu-ni', t: 'Danh từ đơn vị', m: 'Giỏ, rổ', ex: '사과 한 바구니를 샀습니다.' },
+            { w: '상자', p: 'sang-ja', t: 'Danh từ đơn vị', m: 'Hộp, thùng', ex: '귤 한 상자를 받았습니다.' },
+            { w: '봉지', p: 'bong-ji', t: 'Danh từ đơn vị', m: 'Túi ni lông, bịch', ex: '과자 한 봉지를 먹었습니다.' },
+
+            // Từ vựng liên quan đến mua sắm
+            { w: '찾다', p: 'chat-da', t: 'Động từ', m: 'Tìm kiếm', ex: '무엇을 찾으세요?' },
+            { w: '마음에 들다', p: 'ma-eu-me deul-da', t: 'Cụm động từ', m: 'Vừa ý, hài lòng', ex: '이 옷이 마음에 듭니다.' },
+            { w: '맞다', p: 'mat-da', t: 'Động từ', m: 'Vừa, đúng', ex: '사이즈가 잘 맞습니다.' },
+            { w: '어울리다', p: 'eo-ul-li-da', t: 'Động từ', m: 'Phù hợp, hợp', ex: '이 색깔이 잘 어울립니다.' },
+            { w: '주문하다', p: 'ju-mun-ha-da', t: 'Động từ', m: 'Đặt hàng, gọi món', ex: '음식을 주문했습니다.' },
+            { w: '계산하다', p: 'gye-san-ha-da', t: 'Động từ', m: 'Tính tiền, thanh toán', ex: '카드로 계산하겠습니다.' },
+            { w: '교환하다', p: 'gyo-hwan-ha-da', t: 'Động từ', m: 'Đổi hàng (đổi sang đồ khác)', ex: '다른 색으로 교환하고 싶어요.' },
+            { w: '환불하다', p: 'hwan-bul-ha-da', t: 'Động từ', m: 'Trả hàng (lấy lại tiền)', ex: '옷이 작아서 환불했습니다.' },
+
+            // Từ vựng liên quan đến trạng thái của sự vật
+            { w: '짧다', p: 'jjal-ta', t: 'Tính từ', m: 'Ngắn', ex: '치마가 너무 짧습니다.' },
+            { w: '길다', p: 'gil-da', t: 'Tính từ', m: 'Dài', ex: '머리가 깁니다.' },
+            { w: '많다', p: 'man-ta', t: 'Tính từ', m: 'Nhiều', ex: '사람이 많습니다.' },
+            { w: '적다', p: 'jeok-da', t: 'Tính từ', m: 'Ít', ex: '양이 적습니다.' },
+            { w: '두껍다', p: 'du-kkeop-da', t: 'Tính từ', m: 'Dày', ex: '책이 두껍습니다.' },
+            { w: '얇다', p: 'yal-ta', t: 'Tính từ', m: 'Mỏng', ex: '종이가 얇습니다.' },
+            { w: '무겁다', p: 'mu-geop-da', t: 'Tính từ', m: 'Nặng', ex: '가방이 무겁습니다.' },
+            { w: '가볍다', p: 'ga-byeop-da', t: 'Tính từ', m: 'Nhẹ', ex: '노트북이 가볍습니다.' },
+            { w: '화려하다', p: 'hwa-ryeo-ha-da', t: 'Tính từ', m: 'Sặc sỡ, lộng lẫy', ex: '화려한 옷을 좋아합니다.' },
+            { w: '단순하다', p: 'dan-sun-ha-da', t: 'Tính từ', m: 'Đơn giản', ex: '디자인이 단순합니다.' },
+            { w: '편하다', p: 'pyeon-ha-da', t: 'Tính từ', m: 'Thoải mái, tiện lợi', ex: '신발이 편합니다.' },
+            { w: '불편하다', p: 'bul-pyeon-ha-da', t: 'Tính từ', m: 'Không thoải mái, bất tiện', ex: '교통이 불편합니다.' },
+
+            // --- 2. TỪ MỚI (TRANG 76 - CUỐI BÀI) ---
+            
+            { w: '귤', p: 'gyul', t: 'Danh từ', m: 'Quả quýt', ex: '귤이 맛있습니다.' },
+            { w: '기능', p: 'gi-neung', t: 'Danh từ', m: 'Chức năng, kỹ năng', ex: '기능이 다양합니다.' },
+            { w: '기분', p: 'gi-bun', t: 'Danh từ', m: 'Tâm trạng, khí thế', ex: '기분이 좋습니다.' },
+            { w: '노트북', p: 'no-teu-buk', t: 'Danh từ', m: 'Máy tính xách tay', ex: '노트북을 샀습니다.' },
+            { w: '누구나', p: 'nu-gu-na', t: 'Đại từ', m: 'Ai cũng thế, mọi người', ex: '누구나 할 수 있습니다.' },
+            { w: '다양하다', p: 'da-yang-ha-da', t: 'Tính từ', m: 'Đa dạng', ex: '색깔이 다양합니다.' },
+            { w: '단어', p: 'da-neo', t: 'Danh từ', m: 'Từ (vựng)', ex: '단어를 외웁니다.' },
+            { w: '디자인', p: 'di-ja-in', t: 'Danh từ', m: 'Thiết kế', ex: '디자인이 예쁩니다.' },
+            { w: '만', p: 'man', t: 'Tiểu từ', m: 'Chỉ', ex: '물만 마십니다.' },
+            { w: '빠르다', p: 'ppa-reu-da', t: 'Tính từ', m: 'Nhanh', ex: '기차가 빠릅니다.' },
+            { w: '샤프', p: 'sya-peu', t: 'Danh từ', m: 'Bút chì kim', ex: '샤프가 필요합니다.' },
+            { w: '설악산', p: 'Seo-rak-san', t: 'Danh từ', m: 'Núi Seorak', ex: '설악산에 갑니다.' },
+            { w: '쇼핑몰', p: 'syo-ping-mol', t: 'Danh từ', m: 'Khu mua sắm', ex: '쇼핑몰에서 옷을 샀습니다.' },
+            { w: '쉽게', p: 'swip-ge', t: 'Phó từ', m: 'Một cách dễ dàng', ex: '쉽게 설명해 주세요.' },
+            { w: '슈퍼', p: 'syu-peo', t: 'Danh từ', m: 'Siêu thị (nhỏ)', ex: '슈퍼에 갑니다.' },
+            { w: '신다', p: 'sin-ta', t: 'Động từ', m: 'Đi (giày, tất), mang', ex: '구두를 신습니다.' },
+            { w: '싱겁다', p: 'sing-geop-da', t: 'Tính từ', m: 'Nhạt (vị)', ex: '국이 싱겁습니다.' },
+            { w: '싸다', p: 'ssa-da', t: 'Động từ', m: 'Gói, bọc', ex: '선물을 포장지로 쌉니다.' },
+            { w: '유행하다', p: 'yu-haeng-ha-da', t: 'Động từ', m: 'Thời trang, thịnh hành', ex: '이 옷이 유행합니다.' },
+            { w: '제품', p: 'je-pum', t: 'Danh từ', m: 'Sản phẩm', ex: '새 제품이 나왔습니다.' },
+            { w: '카드', p: 'ka-deu', t: 'Danh từ', m: 'Thẻ (tín dụng)', ex: '카드로 계산해도 됩니까?' },
+            { w: '튼튼하다', p: 'teun-teun-ha-da', t: 'Tính từ', m: 'Chắc chắn, bền', ex: '가방이 튼튼합니다.' },
+            { w: '팔다', p: 'pal-da', t: 'Động từ', m: 'Bán', ex: '물건을 팝니다.' },
+            { w: '필요하다', p: 'pi-ryo-ha-da', t: 'Tính từ', m: 'Cần thiết', ex: '도움이 필요합니다.' },
+            { w: '한라산', p: 'Hal-la-san', t: 'Danh từ', m: 'Núi Halla', ex: '제주도에 한라산이 있습니다.' },
+            { w: '할인점', p: 'ha-rin-jeom', t: 'Danh từ', m: 'Cửa hàng giảm giá', ex: '할인점에서 쌉니다.' },
+            { w: '핸드백', p: 'haen-deu-baek', t: 'Danh từ', m: 'Túi xách tay', ex: '핸드백이 비쌉니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-pink-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-pink-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
