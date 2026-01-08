@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 4: Bệnh viện</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#0d9488' } /* Teal Theme for Book 2 Lesson 4 */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 4: Bệnh viện (병원)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 4</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Bệnh viện</h2>
+                <p class="text-teal-100 opacity-90 max-w-lg">Từ vựng về bộ phận cơ thể, triệu chứng bệnh và các loại thuốc.</p>
+            </div>
+            <i class="ph-fill ph-first-aid absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Danh sách từ vựng CHUẨN XÁC theo file PDF Lesson 4 (Sơ cấp 2)
+        const vocabularyList = [
+            // --- 1. TỪ VỰNG CƠ BẢN (TRANG 78-79) ---
+            
+            // Bộ phận cơ thể (Body Parts)
+            { w: '머리', p: 'meo-ri', t: 'Danh từ', m: 'Đầu', ex: '머리가 아픕니다.' },
+            { w: '눈', p: 'nun', t: 'Danh từ', m: 'Mắt', ex: '눈이 나쁩니다.' },
+            { w: '귀', p: 'gwi', t: 'Danh từ', m: 'Tai', ex: '귀가 아파요.' },
+            { w: '코', p: 'ko', t: 'Danh từ', m: 'Mũi', ex: '코가 높습니다.' },
+            { w: '입', p: 'ip', t: 'Danh từ', m: 'Miệng', ex: '입을 벌리세요.' },
+            { w: '얼굴', p: 'eol-gul', t: 'Danh từ', m: 'Khuôn mặt', ex: '얼굴이 예쁩니다.' },
+            { w: '목', p: 'mok', t: 'Danh từ', m: 'Cổ / Họng', ex: '목이 마릅니다.' },
+            { w: '어깨', p: 'eo-kkae', t: 'Danh từ', m: 'Vai', ex: '어깨가 넓습니다.' },
+            { w: '팔', p: 'pal', t: 'Danh từ', m: 'Cánh tay', ex: '팔을 다쳤습니다.' },
+            { w: '손', p: 'son', t: 'Danh từ', m: 'Bàn tay', ex: '손을 씻습니다.' },
+            { w: '허리', p: 'heo-ri', t: 'Danh từ', m: 'Eo, lưng', ex: '허리가 아픕니다.' },
+            { w: '배', p: 'bae', t: 'Danh từ', m: 'Bụng', ex: '배가 고픕니다.' },
+            { w: '다리', p: 'da-ri', t: 'Danh từ', m: 'Chân', ex: '다리가 깁니다.' },
+            { w: '발', p: 'bal', t: 'Danh từ', m: 'Bàn chân', ex: '발이 큽니다.' },
+            
+            // Triệu chứng (Symptoms)
+            { w: '감기(독감)에 걸리다', p: 'gam-gi(dok-kkam)-e geol-li-da', t: 'Cụm động từ', m: 'Bị cảm (cúm)', ex: '감기에 걸려서 학교에 못 갔습니다.' },
+            { w: '기침하다', p: 'gi-chim-ha-da', t: 'Động từ', m: 'Ho', ex: '계속 기침합니다.' },
+            { w: '열이 나다', p: 'yeo-ri na-da', t: 'Cụm động từ', m: 'Sốt', ex: '어제부터 열이 납니다.' },
+            { w: '콧물이 나오다', p: 'kon-mu-ri na-o-da', t: 'Cụm động từ', m: 'Sổ mũi', ex: '콧물이 많이 나옵니다.' },
+            { w: '배탈이 나다', p: 'bae-ta-ri na-da', t: 'Cụm động từ', m: 'Đau bụng, rối loạn tiêu hóa', ex: '찬 음식을 먹어서 배탈이 났습니다.' },
+            { w: '설사하다', p: 'seol-sa-ha-da', t: 'Động từ', m: 'Tiêu chảy', ex: '어제 밤에 설사했습니다.' },
+            { w: '소화가 안 되다', p: 'so-hwa-ga an doe-da', t: 'Cụm động từ', m: 'Khó tiêu', ex: '많이 먹어서 소화가 안 됩니다.' },
+            { w: '토하다', p: 'to-ha-da', t: 'Động từ', m: 'Nôn', ex: '술을 마시고 토했습니다.' },
+            { w: '손을 베다', p: 'so-neul be-da', t: 'Cụm động từ', m: 'Đứt tay', ex: '요리하다가 손을 베었습니다.' },
+            { w: '손을 데다', p: 'so-neul de-da', t: 'Cụm động từ', m: 'Bỏng tay', ex: '뜨거운 물에 손을 데었습니다.' },
+            { w: '발목을 삐다', p: 'bal-mo-geul ppi-da', t: 'Cụm động từ', m: 'Trật chân, bong gân', ex: '축구하다가 발목을 삐었습니다.' },
+            { w: '다리가 부러지다', p: 'da-ri-ga bu-reo-ji-da', t: 'Cụm động từ', m: 'Gãy chân', ex: '넘어져서 다리가 부러졌습니다.' },
+
+            // Thuốc & Bệnh viện (Medicine & Hospital)
+            { w: '내과', p: 'nae-gwa', t: 'Danh từ', m: 'Khoa nội', ex: '배가 아파서 내과에 갑니다.' },
+            { w: '외과', p: 'oe-gwa', t: 'Danh từ', m: 'Khoa ngoại', ex: '다리를 다쳐서 외과에 갑니다.' },
+            { w: '치과', p: 'chi-gwa', t: 'Danh từ', m: 'Nha khoa', ex: '이가 아파서 치과에 갑니다.' },
+            { w: '안과', p: 'an-gwa', t: 'Danh từ', m: 'Khoa mắt', ex: '눈이 아파서 안과에 갑니다.' },
+            { w: '이비인후과', p: 'i-bi-in-hu-gwa', t: 'Danh từ', m: 'Khoa tai mũi họng', ex: '감기 때문에 이비인후과에 갔습니다.' },
+            { w: '소아과', p: 'so-a-gwa', t: 'Danh từ', m: 'Khoa nhi', ex: '아기가 아파서 소아과에 갑니다.' },
+            { w: '피부과', p: 'pi-bu-gwa', t: 'Danh từ', m: 'Khoa da liễu', ex: '얼굴에 뭐가 나서 피부과에 갑니다.' },
+            { w: '약국', p: 'yak-guk', t: 'Danh từ', m: 'Hiệu thuốc', ex: '약국에서 약을 삽니다.' },
+            { w: '약을 먹다', p: 'ya-geul meok-da', t: 'Cụm động từ', m: 'Uống thuốc', ex: '식후에 약을 먹습니다.' },
+            { w: '약을 짓다', p: 'ya-geul jit-da', t: 'Cụm động từ', m: 'Cắt thuốc, bốc thuốc', ex: '한의원에서 약을 지었습니다.' },
+            { w: '주사를 맞다', p: 'ju-sa-reul mat-da', t: 'Cụm động từ', m: 'Tiêm thuốc', ex: '엉덩이에 주사를 맞았습니다.' },
+            { w: '수술하다', p: 'su-sul-ha-da', t: 'Động từ', m: 'Phẫu thuật', ex: '내일 수술합니다.' },
+            { w: '소독하다', p: 'so-dok-ha-da', t: 'Động từ', m: 'Khử trùng', ex: '상처를 소독합니다.' },
+            { w: '연고를 바르다', p: 'yeon-go-reul ba-reu-da', t: 'Cụm động từ', m: 'Bôi thuốc mỡ', ex: '상처에 연고를 바르세요.' },
+            { w: '밴드를 붙이다', p: 'baen-deu-reul bu-chi-da', t: 'Cụm động từ', m: 'Dán băng cá nhân', ex: '손가락에 밴드를 붙였습니다.' },
+            { w: '파스를 붙이다', p: 'pa-seu-reul bu-chi-da', t: 'Cụm động từ', m: 'Dán cao dán', ex: '어깨에 파스를 붙였습니다.' },
+            { w: '찜질하다', p: 'jjim-jil-ha-da', t: 'Động từ', m: 'Chườm nóng/lạnh', ex: '발목을 찜질합니다.' },
+            { w: '붕대를 감다', p: 'bung-dae-reul gam-da', t: 'Cụm động từ', m: 'Băng bó', ex: '다리에 붕대를 감았습니다.' },
+            
+            // Biểu hiện thường dùng (Common Expressions)
+            { w: '어떻게 오셨습니까?', p: 'eo-tteo-ke o-syeot-seum-ni-kka', t: 'Câu hỏi', m: 'Anh/chị đến đây có việc gì ạ?', ex: '어떻게 오셨습니까? - 배가 아파서 왔습니다.' },
+            { w: '어디가 아프십니까?', p: 'eo-di-ga a-peu-sim-ni-kka', t: 'Câu hỏi', m: 'Anh/chị đau ở đâu ạ?', ex: '어디가 아프십니까? - 머리가 아픕니다.' },
+            { w: '증상이 어떻습니까?', p: 'jeung-sang-i eo-tteot-seum-ni-kka', t: 'Câu hỏi', m: 'Triệu chứng thế nào ạ?', ex: '증상이 어떻습니까? - 열이 나고 기침을 합니다.' },
+
+            // --- 2. TỪ MỚI (TRANG 96 - CUỐI BÀI) ---
+            
+            { w: '가렵다', p: 'ga-ryeop-da', t: 'Tính từ', m: 'Ngứa', ex: '등이 가렵습니다.' },
+            { w: '감기약', p: 'gam-gi-yak', t: 'Danh từ', m: 'Thuốc cảm', ex: '감기약을 먹었습니다.' },
+            { w: '검사하다', p: 'geom-sa-ha-da', t: 'Động từ', m: 'Kiểm tra, khám', ex: '눈을 검사합니다.' },
+            { w: '끓이다', p: 'kkeu-ri-da', t: 'Động từ', m: 'Đun, nấu', ex: '물을 끓입니다.' },
+            { w: '냄비', p: 'naem-bi', t: 'Danh từ', m: 'Cái nồi', ex: '냄비에 라면을 끓입니다.' },
+            { w: '(눈을) 뜨다', p: 'nu-neul tteu-da', t: 'Động từ', m: 'Mở mắt', ex: '눈을 뜨세요.' },
+            { w: '두통약', p: 'du-tong-yak', t: 'Danh từ', m: 'Thuốc đau đầu', ex: '두통약을 찾습니다.' },
+            { w: '둘째', p: 'dul-jjae', t: 'Số từ', m: 'Thứ hai', ex: '둘째 아들입니다.' },
+            { w: '따갑다', p: 'tta-gap-da', t: 'Tính từ', m: 'Nhức, buốt, rát', ex: '목이 따갑 습니다.' },
+            { w: '몸살감기', p: 'mom-sal-gam-gi', t: 'Danh từ', m: 'Cảm cúm đau nhức toàn thân', ex: '몸살감기에 걸렸습니다.' },
+            { w: '민간요법', p: 'min-gan-yo-beop', t: 'Danh từ', m: 'Liệu pháp dân gian', ex: '민간요법으로 치료했습니다.' },
+            { w: '배', p: 'bae', t: 'Danh từ', m: 'Quả lê', ex: '배를 먹습니다.' },
+            { w: '복용', p: 'bo-gyong', t: 'Danh từ', m: 'Sự uống thuốc', ex: '하루 3번 복용하세요.' },
+            { w: '붓다', p: 'but-da', t: 'Động từ', m: 'Sưng', ex: '얼굴이 부었습니다.' },
+            { w: '비타민', p: 'bi-ta-min', t: 'Danh từ', m: 'Vitamin', ex: '비타민 C를 먹습니다.' },
+            { w: '상처', p: 'sang-cheo', t: 'Danh từ', m: 'Vết thương', ex: '상처가 났습니다.' },
+            { w: '생강차', p: 'saeng-gang-cha', t: 'Danh từ', m: 'Trà gừng', ex: '생강차를 마십니다.' },
+            { w: '서양', p: 'seo-yang', t: 'Danh từ', m: 'Phương Tây', ex: '서양 의학입니다.' },
+            { w: '소화제', p: 'so-hwa-je', t: 'Danh từ', m: 'Thuốc tiêu hóa', ex: '소화제를 먹었습니다.' },
+            { w: '심하다', p: 'sim-ha-da', t: 'Tính từ', m: 'Nặng, nghiêm trọng', ex: '감기가 심합니다.' },
+            { w: '아무리', p: 'a-mu-ri', t: 'Phó từ', m: 'Cho dù thế nào', ex: '아무리 해도 안 됩니다.' },
+            { w: '알', p: 'al', t: 'Danh từ', m: 'Viên (thuốc)', ex: '약 두 알을 먹습니다.' },
+            { w: '오한', p: 'o-han', t: 'Danh từ', m: 'Cơn ớn lạnh (rét run)', ex: '오한이 납니다.' },
+            { w: '유자차', p: 'yu-ja-cha', t: 'Danh từ', m: 'Trà thanh yên', ex: '유자차는 감기에 좋습니다.' },
+            { w: '응급', p: 'eung-geup', t: 'Danh từ', m: 'Cấp cứu, khẩn cấp', ex: '응급 환자입니다.' },
+            { w: '이', p: 'i', t: 'Danh từ', m: 'Răng', ex: '이가 아픕니다.' },
+            { w: '잠이 오다', p: 'ja-mi o-da', t: 'Cụm động từ', m: 'Buồn ngủ', ex: '약 때문에 잠이 옵니다.' },
+            { w: '전염되다', p: 'jeo-nyeom-doe-da', t: 'Động từ', m: 'Bị lây nhiễm', ex: '감기가 전염되었습니다.' },
+            { w: '조제하다', p: 'jo-je-ha-da', t: 'Động từ', m: 'Pha chế thuốc', ex: '약사가 약을 조제합니다.' },
+            { w: '진찰', p: 'jin-chal', t: 'Danh từ', m: 'Chẩn đoán, khám bệnh', ex: '의사에게 진찰을 받습니다.' },
+            { w: '처방하다', p: 'cheo-bang-ha-da', t: 'Động từ', m: 'Kê đơn thuốc', ex: '의사가 약을 처방했습니다.' },
+            { w: '첫째', p: 'cheot-jjae', t: 'Số từ', m: 'Thứ nhất', ex: '첫째 아들입니다.' },
+            { w: '치료', p: 'chi-ryo', t: 'Danh từ', m: 'Điều trị', ex: '치료를 받습니다.' },
+            { w: '파', p: 'pa', t: 'Danh từ', m: 'Hành', ex: '파를 넣습니다.' },
+            { w: '푹', p: 'puk', t: 'Phó từ', m: 'Kỹ, sâu (ngủ/nghỉ ngơi)', ex: '푹 주무세요.' },
+            { w: '피로', p: 'pi-ro', t: 'Danh từ', m: 'Sự mệt mỏi', ex: '피로가 풀립니다.' },
+            { w: '해열제', p: 'hae-yeol-je', t: 'Danh từ', m: 'Thuốc hạ sốt', ex: '해열제를 먹여야 합니다.' },
+            { w: '혹시', p: 'hok-si', t: 'Phó từ', m: 'Hoặc là, ngộ nhỡ', ex: '혹시 감기입니까?' },
+            { w: '환자', p: 'hwan-ja', t: 'Danh từ', m: 'Bệnh nhân', ex: '환자가 많습니다.' },
+            { w: '회복', p: 'hoe-bok', t: 'Danh từ', m: 'Sự hồi phục', ex: '건강 회복이 빠릅니다.' },
+            { w: '후회하다', p: 'hu-hoe-ha-da', t: 'Động từ', m: 'Hối hận', ex: '지난 일을 후회합니다.' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-teal-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-teal-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
