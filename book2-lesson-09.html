@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 9: Ngày lễ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#16a34a' } /* Green Theme for Holidays/Nature */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 9: Ngày lễ (휴일)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 9</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Ngày lễ</h2>
+                <p class="text-green-100 opacity-90 max-w-lg">Từ vựng về các ngày lễ tết, phong tục tập quán và vui chơi giải trí.</p>
+            </div>
+            <i class="ph-fill ph-confetti absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            { w: '개교기념일', p: 'gae-gyo-gi-nyeom-il', t: 'Danh từ', m: 'ngày thành lập trường', ex: '내일은 우리 학교 개교기념일입니다. (Ngày mai là ngày thành lập trường chúng tôi.)' },
+            { w: '글쓰기 대회', p: 'geul-sseu-gi dae-hoe', t: 'Danh từ', m: 'hội thi viết', ex: '글쓰기 대회에 참가했습니다. (Tôi đã tham gia hội thi viết.)' },
+            { w: '더위팔기', p: 'deo-wi-pal-gi', t: 'Danh từ', m: 'bán cái nóng', ex: '친구에게 더위팔기를 했습니다. (Tôi đã "bán cái nóng" cho bạn.)' },
+            { w: '동해', p: 'dong-hae', t: 'Danh từ', m: 'biển Đông', ex: '동해로 일출을 보러 갔습니다. (Tôi đã đi biển Đông để ngắm bình minh.)' },
+            { w: '땅콩', p: 'ttang-kong', t: 'Danh từ', m: 'lạc, đậu phộng', ex: '맥주 안주로 땅콩을 먹습니다. (Tôi ăn lạc làm đồ nhắm bia.)' },
+            { w: '문화 체험', p: 'mun-hwa che-heom', t: 'Danh từ', m: 'trải nghiệm văn hóa', ex: '한국의 전통 문화 체험을 했습니다. (Tôi đã trải nghiệm văn hóa truyền thống Hàn Quốc.)' },
+            { w: '묵다', p: 'muk-da', t: 'Động từ', m: 'trọ, ở', ex: '제주도에서 어느 호텔에 묵었습니까? (Bạn đã ở khách sạn nào tại Jeju?)' },
+            { w: '민속놀이', p: 'min-sok-nol-i', t: 'Danh từ', m: 'trò chơi dân gian', ex: '명절에는 여러 가지 민속놀이를 합니다. (Vào ngày lễ tết, mọi người chơi nhiều trò chơi dân gian.)' },
+            { w: '보름달', p: 'bo-reum-dal', t: 'Danh từ', m: 'trăng rằm', ex: '보름달이 밝게 빛납니다. (Trăng rằm sáng vằng vặc.)' },
+            { w: '부럼', p: 'bu-reom', t: 'Danh từ', m: 'quả hạch', ex: '정월 대보름에는 부럼을 깹니다. (Vào rằm tháng giêng người ta cắn các loại quả hạch.)' },
+            { w: '부침개', p: 'bu-chim-gae', t: 'Danh từ', m: 'bánh rán, bánh xèo', ex: '비 오는 날에는 부침개를 먹습니다. (Ngày mưa tôi ăn bánh xèo.)' },
+            { w: '(차가) 밀리다', p: '(cha-ga) mil-li-da', t: 'Động từ', m: 'kẹt (xe)', ex: '퇴근 시간에는 차가 많이 밀립니다. (Giờ tan tầm xe bị kẹt nhiều.)' },
+            { w: '서해', p: 'seo-hae', t: 'Danh từ', m: 'biển Tây', ex: '서해 갯벌에서 조개를 잡았습니다. (Tôi đã bắt ngao ở bãi bùn biển Tây.)' },
+            { w: '성탄절', p: 'seong-tan-jeol', t: 'Danh từ', m: 'Lễ Giáng sinh', ex: '성탄절에 선물을 주고받습니다. (Mọi người trao quà cho nhau vào Lễ Giáng sinh.)' },
+            { w: '세배', p: 'se-bae', t: 'Danh từ', m: 'vái lạy', ex: '설날 아침에 어른들께 세배를 드립니다. (Sáng ngày Tết tôi lạy mừng người lớn.)' },
+            { w: '식물원', p: 'sik-mul-won', t: 'Danh từ', m: 'vườn thực vật', ex: '주말에 식물원을 구경했습니다. (Cuối tuần tôi đã đi tham quan vườn thực vật.)' },
+            { w: '약식', p: 'yak-sik', t: 'Danh từ', m: 'món ăn bổ dưỡng (cơm thuốc)', ex: '어머니께서 맛있는 약식을 만드셨습니다. (Mẹ tôi đã làm món yaksik ngon.)' },
+            { w: '연날리기', p: 'yeon-nal-li-gi', t: 'Danh từ', m: 'thả diều', ex: '한강 공원에서 연날리기를 했습니다. (Tôi đã thả diều ở công viên sông Hàn.)' },
+            { w: '오곡밥', p: 'o-gok-bap', t: 'Danh từ', m: 'cơm ngũ cốc', ex: '건강을 위해 오곡밥을 지었습니다. (Tôi đã nấu cơm ngũ cốc để tốt cho sức khỏe.)' },
+            { w: '음력', p: 'eum-ryeok', t: 'Danh từ', m: 'âm lịch', ex: '한국의 설날은 음력 1월 1일입니다. (Tết của Hàn Quốc là ngày 1 tháng 1 âm lịch.)' },
+            { w: '이동', p: 'i-dong', t: 'Danh từ', m: 'di động, di chuyển', ex: '명절에는 귀성객의 이동이 많습니다. (Vào ngày lễ, lượng người di chuyển về quê rất nhiều.)' },
+            { w: '입에 맞다', p: 'ip-e mat-da', t: 'Cụm từ', m: 'hợp khẩu vị', ex: '한국 음식이 제 입에 잘 맞습니다. (Món ăn Hàn Quốc rất hợp khẩu vị của tôi.)' },
+            { w: '쥐불놀이', p: 'jwi-bul-nol-i', t: 'Danh từ', m: 'trò đốt ống bơ', ex: '시골에서 쥐불놀이를 보았습니다. (Tôi đã xem trò đốt ống bơ ở quê.)' },
+            { w: '차례 (제사)', p: 'cha-rye (je-sa)', t: 'Danh từ', m: 'cúng, tế lễ', ex: '설날 아침에 차례를 지냅니다. (Cúng tổ tiên vào sáng ngày Tết.)' },
+            { w: '콘도', p: 'kon-do', t: 'Danh từ', m: 'chỗ ở (cho nhiều người)', ex: '가족 여행을 가서 콘도에서 묵었습니다. (Tôi đi du lịch gia đình và ở tại khu nghỉ dưỡng condo.)' },
+            { w: '학비', p: 'hak-bi', t: 'Danh từ', m: 'học phí', ex: '이번 학기 학비가 올랐습니다. (Học phí học kỳ này đã tăng.)' },
+            { w: '호두', p: 'ho-du', t: 'Danh từ', m: 'quả đầu chó (óc chó)', ex: '호두는 머리에 좋습니다. (Quả óc chó tốt cho trí não.)' },
+            { w: '회식', p: 'hoe-sik', t: 'Danh từ', m: 'liên hoan', ex: '오늘 저녁에 부서 회식이 있습니다. (Tối nay có buổi liên hoan của bộ phận.)' },
+            { w: '휴일', p: 'hyu-il', t: 'Danh từ', m: 'ngày nghỉ', ex: '휴일에는 늦잠을 잡니다. (Tôi ngủ nướng vào ngày nghỉ.)' },
+            { w: '공휴일', p: 'gong-hyu-il', t: 'Danh từ', m: 'ngày lễ', ex: '이번 달에는 공휴일이 없습니다. (Tháng này không có ngày lễ nào.)' },
+            { w: '연휴', p: 'yeon-hyu', t: 'Danh từ', m: 'nghỉ dài ngày', ex: '설날 연휴에 고향에 갈 겁니다. (Tôi sẽ về quê vào kỳ nghỉ Tết dài ngày.)' },
+            { w: '기념일', p: 'gi-nyeom-il', t: 'Danh từ', m: 'ngày kỷ niệm', ex: '결혼 기념일에 외식을 했습니다. (Tôi đã đi ăn ngoài vào ngày kỷ niệm kết hôn.)' },
+            { w: '여행을 떠나다', p: 'yeo-haeng-eul tteo-na-da', t: 'Động từ', m: 'đi du lịch', ex: '배낭을 메고 여행을 떠납니다. (Tôi đeo ba lô và đi du lịch.)' },
+            { w: '소풍을 가다', p: 'so-pung-eul ga-da', t: 'Động từ', m: 'đi dã ngoại', ex: '봄에 공원으로 소풍을 갑니다. (Tôi đi dã ngoại ở công viên vào mùa xuân.)' },
+            { w: '설', p: 'seol', t: 'Danh từ', m: 'Tết', ex: '설은 한국의 큰 명절입니다. (Tết là ngày lễ lớn của Hàn Quốc.)' },
+            { w: '추석 / 한가위', p: 'chu-seok / han-ga-wi', t: 'Danh từ', m: 'Trung thu', ex: '추석에는 보름달을 봅니다. (Vào Trung thu người ta ngắm trăng rằm.)' },
+            { w: '떡국', p: 'tteok-guk', t: 'Danh từ', m: 'súp bánh tteok', ex: '설날에 떡국을 먹으면 한 살을 더 먹습니다. (Ăn súp bánh tteok vào ngày Tết sẽ thêm một tuổi.)' },
+            { w: '송편', p: 'song-pyeon', t: 'Danh từ', m: 'bánh songpyeon', ex: '추석에 가족과 송편을 빚었습니다. (Vào Trung thu tôi đã nặn bánh songpyeon cùng gia đình.)' },
+            { w: '윷놀이', p: 'yut-nol-i', t: 'Danh từ', m: 'trò chơi yut', ex: '친척들이 모여서 윷놀이를 했습니다. (Họ hàng tụ họp và chơi trò yut.)' },
+            { w: '강강술래', p: 'gang-gang-sul-lae', t: 'Danh từ', m: 'múa vòng tròn', ex: '보름달 아래에서 강강술래를 합니다. (Mọi người múa vòng tròn dưới ánh trăng rằm.)' },
+            { w: '씨름', p: 'ssi-reum', t: 'Danh từ', m: 'môn đấu vật', ex: '천하장사 씨름 대회를 봅니다. (Tôi xem đại hội đấu vật thiên hạ tráng sĩ.)' },
+            { w: '세배를 하다', p: 'se-bae-reul ha-da', t: 'Động từ', m: 'lạy mừng ông bà / bố mẹ đầu năm mới', ex: '할아버지께 세배를 했습니다. (Tôi đã lạy mừng ông nội.)' },
+            { w: '세뱃돈을 받다', p: 'se-baet-don-eul bat-da', t: 'Động từ', m: 'nhận tiền mừng tuổi', ex: '아이들이 세뱃돈을 받고 기뻐합니다. (Lũ trẻ vui mừng khi nhận tiền mừng tuổi.)' },
+            { w: '복을 받다', p: 'bok-eul bat-da', t: 'Động từ', m: 'được may mắn, hạnh phúc', ex: '새해 복 많이 받으세요. (Chúc mừng năm mới / Chúc nhận được nhiều phúc.)' },
+            { w: '보름달이 뜨다', p: 'bo-reum-dal-i tteu-da', t: 'Động từ', m: 'trăng rằm lên', ex: '산 위로 둥근 보름달이 떴습니다. (Trăng rằm tròn vành vạnh đã mọc trên núi.)' },
+            { w: '소원을 빌다', p: 'so-won-eul bil-da', t: 'Động từ', m: 'ước, cầu mong', ex: '달을 보며 소원을 빌었습니다. (Tôi nhìn trăng và cầu nguyện.)' },
+            { w: '차례를 지내다', p: 'cha-rye-reul ji-nae-da', t: 'Động từ', m: 'cúng tổ tiên', ex: '명절 아침 일찍 차례를 지냅니다. (Sáng sớm ngày lễ tết người ta cúng tổ tiên.)' },
+            { w: '고향에 내려가다 / 올라가다', p: 'go-hyang-e nae-ryeo-ga-da / ol-la-ga-da', t: 'Động từ', m: 'về quê', ex: '이번 설에는 고향에 내려가지 않습니다. (Tết này tôi không về quê.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-green-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-green-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

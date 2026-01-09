@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 13: Đô thị</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#475569' } /* Slate Theme for City/Urban */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 13: Đô thị (도시)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-slate-700 to-slate-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 13</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Đô thị</h2>
+                <p class="text-slate-200 opacity-90 max-w-lg">Từ vựng về đặc điểm thành phố, hành chính và các ngành kinh tế.</p>
+            </div>
+            <i class="ph-fill ph-city absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Đặc điểm đô thị (City Characteristics)
+            { w: '인구', p: 'in-gu', t: 'Danh từ', m: 'Dân số', ex: '서울은 인구가 많습니다. (Seoul có dân số đông.)' },
+            { w: '면적', p: 'myeon-jeok', t: 'Danh từ', m: 'Diện tích', ex: '러시아는 면적이 넓은 나라입니다. (Nga là đất nước có diện tích rộng.)' },
+            { w: '위치', p: 'wi-chi', t: 'Danh từ', m: 'Vị trí', ex: '병원의 위치를 지도에서 찾았습니다. (Tôi đã tìm thấy vị trí bệnh viện trên bản đồ.)' },
+            { w: '물가', p: 'mul-ga', t: 'Danh từ', m: 'Vật giá', ex: '요즘 물가가 많이 올랐습니다. (Dạo này vật giá tăng nhiều.)' },
+            { w: '지역', p: 'ji-yeok', t: 'Danh từ', m: 'Vùng, khu vực', ex: '이 지역은 날씨가 따뜻합니다. (Khu vực này thời tiết ấm áp.)' },
+            { w: '중심지', p: 'jung-sim-ji', t: 'Danh từ', m: 'Khu trung tâm', ex: '명동은 서울의 쇼핑 중심지입니다. (Myeongdong là trung tâm mua sắm của Seoul.)' },
+            { w: '도시', p: 'do-si', t: 'Danh từ', m: 'Thành phố', ex: '밤이 되면 도시의 야경이 예쁩니다. (Về đêm cảnh đêm thành phố rất đẹp.)' },
+            { w: '시골', p: 'si-gol', t: 'Danh từ', m: 'Nông thôn', ex: '방학에 시골 할머니 댁에 갔습니다. (Kỳ nghỉ tôi đã về quê thăm nhà bà.)' },
+            { w: '수도', p: 'su-do', t: 'Danh từ', m: 'Thủ đô', ex: '베트남의 수도는 하노이입니다. (Thủ đô của Việt Nam là Hà Nội.)' },
+            { w: '유명하다', p: 'yu-myeong-ha-da', t: 'Tính từ', m: 'Nổi tiếng', ex: '김치는 한국의 유명한 음식입니다. (Kimchi là món ăn nổi tiếng của Hàn Quốc.)' },
+            { w: '경치가 아름답다', p: 'gyeong-chi-ga a-reum-dap-da', t: 'Cụm từ', m: 'Phong cảnh đẹp', ex: '설악산은 경치가 아름답습니다. (Núi Seorak có phong cảnh đẹp.)' },
+            { w: '역사가 깊다', p: 'yeok-sa-ga gip-da', t: 'Cụm từ', m: 'Lịch sử lâu đời', ex: '경주는 역사가 깊은 도시입니다. (Gyeongju là thành phố có lịch sử lâu đời.)' },
+
+            // 2. Địa lý (Geography)
+            { w: '육지', p: 'yuk-ji', t: 'Danh từ', m: 'Lục địa', ex: '배를 타고 섬에서 육지로 나갑니다. (Đi tàu từ đảo ra lục địa.)' },
+            { w: '바다', p: 'ba-da', t: 'Danh từ', m: 'Biển', ex: '여름 휴가 때 바다에 갔습니다. (Kỳ nghỉ hè tôi đã đi biển.)' },
+            { w: '섬', p: 'seom', t: 'Danh từ', m: 'Đảo', ex: '제주도는 아름다운 섬입니다. (Đảo Jeju là hòn đảo xinh đẹp.)' },
+            { w: '동', p: 'dong', t: 'Danh từ', m: 'Đông', ex: '해는 동쪽에서 뜹니다. (Mặt trời mọc ở phía đông.)' },
+            { w: '서', p: 'seo', t: 'Danh từ', m: 'Tây', ex: '해는 서쪽으로 집니다. (Mặt trời lặn ở phía tây.)' },
+            { w: '남', p: 'nam', t: 'Danh từ', m: 'Nam', ex: '남쪽으로 가면 바다가 있습니다. (Đi về phía nam sẽ có biển.)' },
+            { w: '북', p: 'buk', t: 'Danh từ', m: 'Bắc', ex: '북쪽에서 차가운 바람이 불어옵니다. (Gió lạnh thổi từ phía bắc đến.)' },
+
+            // 3. Ngành nghề & Kinh tế (Industry & Economy)
+            { w: '공업', p: 'gong-eop', t: 'Danh từ', m: 'Công nghiệp', ex: '울산은 공업 도시입니다. (Ulsan là thành phố công nghiệp.)' },
+            { w: '상업', p: 'sang-eop', t: 'Danh từ', m: 'Thương nghiệp', ex: '이곳은 상업이 발달했습니다. (Nơi này thương nghiệp phát triển.)' },
+            { w: '농업', p: 'nong-eop', t: 'Danh từ', m: 'Nông nghiệp', ex: '시골에서는 주로 농업을 합니다. (Ở nông thôn chủ yếu làm nông nghiệp.)' },
+            { w: '관광업', p: 'gwan-gwang-eop', t: 'Danh từ', m: 'Ngành du lịch', ex: '이 나라는 관광업으로 돈을 봅니다. (Đất nước này kiếm tiền bằng ngành du lịch.)' },
+            { w: '경제 자유 구역', p: 'gyeong-je ja-yu gu-yeok', t: 'Danh từ', m: 'Khu vực kinh tế tự do', ex: '인천에는 경제 자유 구역이 있습니다. (Ở Incheon có khu vực kinh tế tự do.)' },
+            { w: '국제 무역항', p: 'guk-je mu-yeok-hang', t: 'Danh từ', m: 'Cảng thương mại quốc tế', ex: '부산항은 한국의 대표적인 국제 무역항입니다. (Cảng Busan là cảng thương mại quốc tế tiêu biểu của Hàn Quốc.)' },
+            { w: '상업 도시', p: 'sang-eop do-si', t: 'Danh từ', m: 'Thành phố thương nghiệp', ex: '뉴욕은 세계적인 상업 도시입니다. (New York là thành phố thương nghiệp mang tầm thế giới.)' },
+
+            // 4. Văn hóa & Khác (Culture & Others)
+            { w: '최고', p: 'choe-go', t: 'Danh từ', m: 'Cao nhất', ex: '오늘 기온은 최고 35도입니다. (Nhiệt độ hôm nay cao nhất là 35 độ.)' },
+            { w: '최대', p: 'choe-dae', t: 'Danh từ', m: 'Lớn nhất, tối đa', ex: '이 버스는 최대 45명까지 탈 수 있습니다. (Xe buýt này chở tối đa được 45 người.)' },
+            { w: '(감기가) 낫다', p: 'nat-da', t: 'Động từ', m: '(Cảm) đỡ hơn', ex: '약을 먹고 감기가 낫습니다. (Uống thuốc xong cảm cúm đã đỡ hơn.)' },
+            { w: '굽다', p: 'gup-da', t: 'Động từ', m: 'Nung, nướng', ex: '가마에서 도자기를 굽습니다. (Nung gốm trong lò.)' },
+            { w: '단군신화', p: 'dan-gun-sin-hwa', t: 'Danh từ', m: 'Thần thoại Tangun', ex: '단군신화는 한국의 건국 신화입니다. (Thần thoại Tangun là thần thoại kiến quốc của Hàn Quốc.)' },
+            { w: '단군왕검', p: 'dan-gun-wang-geom', t: 'Danh từ', m: 'Tangun Wanggeom', ex: '단군왕검이 고조선을 세웠습니다. (Tangun Wanggeom đã thành lập nước Gojoseon.)' },
+            { w: '단오', p: 'dan-o', t: 'Danh từ', m: 'Tết Đoan ngọ (5/5 âm lịch)', ex: '단오에 머리를 감는 풍습이 있습니다. (Có phong tục gội đầu vào Tết Đoan ngọ.)' },
+            { w: '도자기', p: 'do-ja-gi', t: 'Danh từ', m: 'Đồ gốm sứ', ex: '박물관에서 아름다운 도자기를 보았습니다. (Tôi đã ngắm đồ gốm sứ đẹp tại bảo tàng.)' },
+            { w: '가마', p: 'ga-ma', t: 'Danh từ', m: 'Lò (nung gốm)', ex: '도자기를 가마에 넣습니다. (Bỏ đồ gốm vào lò nung.)' },
+            { w: '불꽃 축제', p: 'bul-kkot chuk-je', t: 'Danh từ', m: 'Lễ hội pháo hoa', ex: '가을에 한강에서 불꽃 축제를 합니다. (Vào mùa thu có lễ hội pháo hoa ở sông Hàn.)' },
+            { w: '(얼굴이) 붓다', p: 'but-da', t: 'Động từ', m: '(Mặt) bị sưng', ex: '라면을 먹고 자서 얼굴이 부었습니다. (Ăn mì rồi ngủ nên mặt bị sưng.)' },
+            { w: '비엔날레', p: 'bi-en-nal-le', t: 'Danh từ', m: 'Triển lãm Biennale (2 năm/lần)', ex: '광주 비엔날레가 유명합니다. (Triển lãm Gwangju Biennale rất nổi tiếng.)' },
+            { w: '예술', p: 'ye-sul', t: 'Danh từ', m: 'Nghệ thuật', ex: '그는 예술에 관심이 많습니다. (Anh ấy quan tâm nhiều đến nghệ thuật.)' },
+            { w: '예전', p: 'ye-jeon', t: 'Danh từ', m: 'Trước đây', ex: '이곳은 예전에 학교였습니다. (Nơi này trước đây là trường học.)' },
+            { w: '진흙', p: 'jin-heuk', t: 'Danh từ', m: 'Đất sét', ex: '진흙으로 그릇을 빚습니다. (Nặn bát bằng đất sét.)' },
+            { w: '해수욕장', p: 'hae-su-yok-jang', t: 'Danh từ', m: 'Bãi tắm (biển)', ex: '여름에 해수욕장에서 수영을 합니다. (Mùa hè tôi bơi ở bãi tắm biển.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-slate-100/70 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-slate-200 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 5: Giao thông (2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#0284c7' } /* Sky Blue Theme for Traffic */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 6: Giao thông (교통)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <div class="bg-gradient-to-r from-sky-600 to-blue-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 5</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Giao thông (2)</h2>
+                <p class="text-sky-100 opacity-90 max-w-lg">Từ vựng về phương tiện đi lại, phương hướng di chuyển và các địa điểm liên quan.</p>
+            </div>
+            <i class="ph-fill ph-bus absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Phương tiện giao thông (2)
+            { w: '시내버스', p: 'si-nae-beo-seu', t: 'Danh từ', m: 'Xe buýt nội thành', ex: '시내버스를 타고 학교에 갑니다.' },
+            { w: '시외버스', p: 'si-oe-beo-seu', t: 'Danh từ', m: 'Xe buýt ngoại thành', ex: '시외버스터미널에 갑니다.' },
+            { w: '마을버스', p: 'ma-eul-beo-seu', t: 'Danh từ', m: 'Xe buýt tuyến ngắn', ex: '집 앞에는 마을버스가 있습니다.' },
+            { w: '셔틀버스', p: 'syeo-teul-beo-seu', t: 'Danh từ', m: 'Xe buýt chạy theo tuyến nội bộ', ex: '공항 셔틀버스를 이용하세요.' },
+            { w: '일반 택시', p: 'il-ban taek-si', t: 'Danh từ', m: 'Taxi thường', ex: '일반 택시 요금이 쌉니다.' },
+            { w: '콜택시', p: 'kol-taek-si', t: 'Danh từ', m: 'Taxi gọi qua tổng đài', ex: '콜택시를 불렀습니다.' },
+            { w: '모범택시', p: 'mo-beom-taek-si', t: 'Danh từ', m: 'Taxi cao cấp', ex: '모범택시는 서비스가 좋습니다.' },
+            { w: '리무진 택시', p: 'ri-mu-jin taek-si', t: 'Danh từ', m: 'Taxi loại lớn', ex: '짐이 많아서 리무진 택시를 탔습니다.' },
+
+            // 2. Cấu trúc và từ vựng liên quan đến giao thông (2)
+            { w: '(1)번 출구', p: '(il)-beon chul-gu', t: 'Danh từ', m: 'Cổng số 1, cửa ra số 1', ex: '1번 출구에서 만납시다.' },
+            { w: '(1)호선', p: '(il)-ho-seon', t: 'Danh từ', m: 'Đường tàu số 1', ex: '지하철 1호선으로 갈아타세요.' },
+            { w: '환승역', p: 'hwan-seung-yeok', t: 'Danh từ', m: 'Ga trung chuyển, ga đổi tàu', ex: '여기는 환승역입니다.' },
+            { w: '갈아타는 곳', p: 'ga-ra-ta-neun got', t: 'Danh từ', m: 'Nơi đổi tuyến', ex: '갈아타는 곳이 어디입니까?' },
+            { w: '방면', p: 'bang-myeon', t: 'Danh từ', m: 'Hướng', ex: '강남 방면으로 갑니다.' },
+            { w: '행', p: 'haeng', t: 'Hậu tố', m: 'Đi (hướng đi)', ex: '부산행 기차입니다.' },
+            { w: '교통 카드', p: 'gyo-tong ka-deu', t: 'Danh từ', m: 'Thẻ giao thông', ex: '교통 카드를 충전합니다.' },
+            { w: '기본요금', p: 'gi-bon-yo-geum', t: 'Danh từ', m: 'Phí cơ bản', ex: '택시 기본요금이 올랐습니다.' },
+            { w: '노선도', p: 'no-seon-do', t: 'Danh từ', m: 'Bản đồ lộ trình', ex: '지하철 노선도를 봅니다.' },
+            { w: '골목', p: 'gol-mok', t: 'Danh từ', m: 'Ngõ, hẻm', ex: '골목이 좁습니다.' },
+            { w: '모퉁이', p: 'mo-tung-i', t: 'Danh từ', m: 'Góc đường', ex: '모퉁이를 돌면 편의점이 있습니다.' },
+            { w: '건널목', p: 'geon-neol-mok', t: 'Danh từ', m: 'Lối xe lửa đi qua, cổng chắn tàu', ex: '건널목에서 일단 멈추세요.' },
+            { w: '삼거리', p: 'sam-geo-ri', t: 'Danh từ', m: 'Ngã ba', ex: '삼거리에서 좌회전하세요.' },
+            { w: '사거리', p: 'sa-geo-ri', t: 'Danh từ', m: 'Ngã tư', ex: '사거리에 신호등이 있습니다.' },
+            { w: '버스 전용 도로', p: 'beo-seu jeon-yong do-ro', t: 'Danh từ', m: 'Đường dành riêng cho xe buýt', ex: '버스 전용 도로가 빠릅니다.' },
+
+            // 3. Tòa nhà (Buildings)
+            { w: '마트', p: 'ma-teu', t: 'Danh từ', m: 'Siêu thị', ex: '마트에서 장을 봅니다.' },
+            { w: '미용실', p: 'mi-yong-sil', t: 'Danh từ', m: 'Tiệm làm tóc (nữ)', ex: '미용실에서 파마를 했습니다.' },
+            { w: '주유소', p: 'ju-yu-so', t: 'Danh từ', m: 'Trạm xăng', ex: '주유소에서 기름을 넣습니다.' },
+
+            // 4. Phương hướng di chuyển
+            { w: '오른쪽으로 가다', p: 'o-reun-jjo-geu-ro ga-da', t: 'Cụm động từ', m: 'Đi về bên phải', ex: '약국에서 오른쪽으로 가세요.' },
+            { w: '우회전하다', p: 'u-hoe-jeon-ha-da', t: 'Động từ', m: 'Rẽ phải', ex: '사거리에서 우회전하세요.' },
+            { w: '왼쪽으로 가다', p: 'oen-jjo-geu-ro ga-da', t: 'Cụm động từ', m: 'Đi về bên trái', ex: '은행은 왼쪽으로 가세요.' },
+            { w: '좌회전하다', p: 'jwa-hoe-jeon-ha-da', t: 'Động từ', m: 'Rẽ trái', ex: '신호등에서 좌회전하세요.' },
+            { w: '똑바로 가다', p: 'ttok-ba-ro ga-da', t: 'Cụm động từ', m: 'Đi thẳng', ex: '앞으로 똑바로 가세요.' },
+            { w: '직진하다', p: 'jik-jin-ha-da', t: 'Động từ', m: 'Đi thẳng', ex: '쭉 직진하세요.' },
+            { w: '곧장 가다', p: 'got-jang ga-da', t: 'Cụm động từ', m: 'Đi thẳng', ex: '병원까지 곧장 가세요.' },
+            { w: '쭉 가다', p: 'jjuk ga-da', t: 'Cụm động từ', m: 'Đi miết (đi thẳng hoài)', ex: '이 길을 따라 쭉 가세요.' },
+            { w: '지나가다', p: 'ji-na-ga-da', t: 'Động từ', m: 'Đi qua, vượt qua', ex: '우체국을 지나가세요.' },
+            { w: '건너가다', p: 'geon-neo-ga-da', t: 'Động từ', m: 'Đi băng qua (bên kia)', ex: '육교를 건너가세요.' },
+            { w: '돌아가다', p: 'do-ra-ga-da', t: 'Động từ', m: 'Quay lại', ex: '집으로 돌아갑니다.' },
+            { w: '유턴하다', p: 'yu-teon-ha-da', t: 'Động từ', m: 'Quay đầu (xe)', ex: '여기서 유턴하세요.' },
+            { w: '나가다', p: 'na-ga-da', t: 'Động từ', m: 'Đi ra (hướng xa phía người nói)', ex: '밖으로 나갑니다.' },
+            { w: '나오다', p: 'na-o-da', t: 'Động từ', m: 'Ra (hướng về phía người nói)', ex: '교실 밖으로 나오세요.' },
+            { w: '(모퉁이를) 돌다', p: '(mo-tung-i-reul) dol-da', t: 'Cụm động từ', m: 'Quay đầu xe (tại góc đường)', ex: '모퉁이를 돌면 서점이 있습니다.' },
+
+            // 5. Từ mới khác
+            { w: '난타', p: 'nan-ta', t: 'Danh từ', m: 'Nanta (nghệ thuật dùng dụng cụ nấu ăn làm nhạc cụ)', ex: '난타 공연을 봤습니다.' },
+            { w: '담요', p: 'dam-yo', t: 'Danh từ', m: 'Chăn, mền', ex: '담요를 덮으세요.' },
+            { w: '덕수궁', p: 'deok-su-gung', t: 'Danh từ', m: 'Cung Deoksu', ex: '덕수궁 돌담길이 유명합니다.' },
+            { w: '발표회', p: 'bal-pyo-hoe', t: 'Danh từ', m: 'Buổi phát biểu, buổi trình diễn', ex: '피아노 발표회가 있습니다.' },
+            { w: '배달원', p: 'bae-dal-won', t: 'Danh từ', m: 'Nhân viên giao hàng', ex: '배달원이 음식을 가져옵니다.' },
+            { w: '색연필', p: 'saek-yeon-pil', t: 'Danh từ', m: 'Bút chì màu', ex: '색연필로 그림을 그립니다.' },
+            { w: '올림픽공원', p: 'ol-lim-pik-gong-won', t: 'Danh từ', m: 'Công viên Olympic', ex: '올림픽공원에서 산책합니다.' },
+            { w: '월드컵경기장', p: 'wol-deu-keop-gyeong-gi-jang', t: 'Danh từ', m: 'Sân vận động World Cup', ex: '경기장에서 축구를 봅니다.' },
+            { w: '콩잎', p: 'kong-ip', t: 'Danh từ', m: 'Lá đậu', ex: '콩잎 반찬을 좋아합니다.' }
+        ];
+
+        const tbody = document.getElementById('table-body');
+        document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+        let html = '';
+        vocabularyList.forEach((item, index) => {
+            html += `
+            <tr class="hover:bg-sky-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-sky-100 transition-all">${item.ex}</div></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    </script>
+</body>
+</html>

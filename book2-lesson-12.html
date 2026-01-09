@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 12: Nơi công cộng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#2563eb' } /* Blue Theme for Public Places */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 12: Nơi công cộng (공공장소)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 12</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Nơi công cộng</h2>
+                <p class="text-blue-100 opacity-90 max-w-lg">Từ vựng về các địa điểm công cộng và phép lịch sự nơi đông người.</p>
+            </div>
+            <i class="ph-fill ph-buildings absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Địa điểm công cộng (Public Places)
+            { w: '도서관', p: 'do-seo-gwan', t: 'Danh từ', m: 'Thư viện', ex: '도서관에서 조용히 책을 읽습니다. (Tôi đọc sách yên lặng ở thư viện.)' },
+            { w: '공원', p: 'gong-won', t: 'Danh từ', m: 'Công viên', ex: '날씨가 좋아서 공원에 산책하러 갔습니다. (Thời tiết đẹp nên tôi đã đi dạo ở công viên.)' },
+            { w: '미술관', p: 'mi-sul-gwan', t: 'Danh từ', m: 'Bảo tàng mỹ thuật', ex: '미술관에 가서 그림을 감상합니다. (Tôi đi bảo tàng mỹ thuật để thưởng thức tranh.)' },
+            { w: '박물관', p: 'bak-mul-gwan', t: 'Danh từ', m: 'Bảo tàng', ex: '박물관에서 옛날 물건들을 보았습니다. (Tôi đã xem những đồ vật ngày xưa ở bảo tàng.)' },
+            { w: '연주회장', p: 'yeon-ju-hoe-jang', t: 'Danh từ', m: 'Nhà hát / Phòng hòa nhạc', ex: '연주회장이 사람들로 가득 찼습니다. (Nhà hát chật kín người.)' },
+            { w: '기숙사', p: 'gi-suk-sa', t: 'Danh từ', m: 'Ký túc xá', ex: '학교 기숙사에서 친구들과 함께 삽니다. (Tôi sống cùng bạn bè ở ký túc xá trường.)' },
+            { w: '극장', p: 'geuk-jang', t: 'Danh từ', m: 'Rạp chiếu phim', ex: '주말에 극장에서 재미있는 영화를 봤습니다. (Cuối tuần tôi đã xem phim hay ở rạp chiếu phim.)' },
+            { w: '병원', p: 'byeong-won', t: 'Danh từ', m: 'Bệnh viện', ex: '몸이 아파서 병원에 가서 진료를 받았습니다. (Tôi bị ốm nên đã đến bệnh viện khám.)' },
+            { w: '공항', p: 'gong-hang', t: 'Danh từ', m: 'Sân bay', ex: '친구를 배웅하러 공항에 나갔습니다. (Tôi đã ra sân bay để tiễn bạn.)' },
+
+            // 2. Quy tắc nơi công cộng (Public Etiquette)
+            { w: '질서를 지키다', p: 'jil-seo-reul ji-ki-da', t: 'Cụm động từ', m: 'Giữ trật tự', ex: '공공장소에서는 질서를 지켜야 합니다. (Ở nơi công cộng phải giữ trật tự.)' },
+            { w: '조용히 하다', p: 'jo-yong-hi ha-da', t: 'Cụm động từ', m: 'Giữ yên lặng', ex: '도서관에서는 조용히 해 주세요. (Làm ơn hãy giữ yên lặng trong thư viện.)' },
+            { w: '떠들다', p: 'tteo-deul-da', t: 'Động từ', m: 'Làm ồn', ex: '수업 시간에 떠들면 안 됩니다. (Không được làm ồn trong giờ học.)' },
+            { w: '방해하다', p: 'bang-hae-ha-da', t: 'Động từ', m: 'Gây cản trở, làm phiền', ex: '다른 사람의 공부를 방해하지 마세요. (Đừng gây cản trở việc học của người khác.)' },
+            { w: '금연하다', p: 'geum-yeon-ha-da', t: 'Động từ', m: 'Cấm hút thuốc', ex: '이 건물은 전체가 금연 구역입니다. (Toàn bộ tòa nhà này là khu vực cấm hút thuốc.)' },
+            { w: '손을 대다', p: 'son-eul dae-da', t: 'Cụm động từ', m: 'Chạm tay', ex: '전시품에 손을 대지 마십시오. (Xin đừng chạm tay vào vật trưng bày.)' },
+            { w: '개를 데려가다', p: 'gae-reul de-ryeo-ga-da', t: 'Cụm động từ', m: 'Dắt chó theo', ex: '공원에 개를 데려갈 때는 목줄을 해야 합니다. (Khi dắt chó theo vào công viên phải đeo dây xích.)' },
+
+            // 3. Từ vựng khác (Other Vocabulary)
+            { w: '강', p: 'gang', t: 'Danh từ', m: 'Sông', ex: '서울에는 큰 한강이 흐릅니다. (Ở Seoul có sông Hàn lớn chảy qua.)' },
+            { w: '강아지', p: 'gang-a-ji', t: 'Danh từ', m: 'Chó con', ex: '귀여운 강아지를 한 마리 입양했습니다. (Tôi đã nhận nuôi một chú chó con đáng yêu.)' },
+            { w: '공중목욕탕', p: 'gong-jung-mok-yok-tang', t: 'Danh từ', m: 'Nhà tắm công cộng', ex: '피곤해서 공중목욕탕에 가서 씻었습니다. (Vì mệt nên tôi đã đi tắm ở nhà tắm công cộng.)' },
+            { w: '그림', p: 'geu-rim', t: 'Danh từ', m: 'Bức tranh', ex: '벽에 예쁜 그림을 걸었습니다. (Tôi đã treo bức tranh đẹp lên tường.)' },
+            { w: '뒷문', p: 'dwin-mun', t: 'Danh từ', m: 'Cửa sau', ex: '앞문이 잠겨서 뒷문으로 들어갔습니다. (Cửa trước bị khóa nên tôi đã vào bằng cửa sau.)' },
+            { w: '면회', p: 'myeon-hoe', t: 'Danh từ', m: 'Thăm nuôi, gặp mặt', ex: '군대에 있는 친구에게 면회를 갔습니다. (Tôi đã đi thăm người bạn đang ở trong quân đội.)' },
+            { w: '반납', p: 'ban-nap', t: 'Danh từ', m: 'Trả lại, nộp lại', ex: '도서관에 책을 반납했습니다. (Tôi đã trả lại sách cho thư viện.)' },
+            { w: '병실', p: 'byeong-sil', t: 'Danh từ', m: 'Phòng bệnh', ex: '병실이 아주 조용합니다. (Phòng bệnh rất yên tĩnh.)' },
+            { w: '연주회', p: 'yeon-ju-hoe', t: 'Danh từ', m: 'Buổi hòa nhạc', ex: '피아노 연주회 표를 예매했습니다. (Tôi đã đặt vé buổi hòa nhạc piano.)' },
+            { w: '왜냐하면', p: 'wae-nya-ha-myeon', t: 'Liên từ', m: 'Đó là vì', ex: '저는 그를 좋아합니다. 왜냐하면 친절하기 때문입니다. (Tôi thích anh ấy. Đó là vì anh ấy tốt bụng.)' },
+            { w: '유의 사항', p: 'yu-ui sa-hang', t: 'Danh từ', m: 'Điều cần lưu ý', ex: '시험 볼 때 유의 사항을 잘 읽으세요. (Hãy đọc kỹ những điều cần lưu ý khi thi.)' },
+            { w: '음악회', p: 'eum-ak-hoe', t: 'Danh từ', m: 'Buổi biểu diễn ca nhạc', ex: '학교에서 작은 음악회가 열렸습니다. (Một buổi biểu diễn ca nhạc nhỏ đã được tổ chức ở trường.)' },
+            { w: '이륙하다', p: 'i-ryuk-ha-da', t: 'Động từ', m: 'Cất cánh', ex: '비행기가 10분 후에 이륙합니다. (Máy bay sẽ cất cánh sau 10 phút nữa.)' },
+            { w: '이번', p: 'i-beon', t: 'Danh từ', m: 'Lần này', ex: '이번 주말에는 바쁩니다. (Cuối tuần lần này tôi bận.)' },
+            { w: '입원하다', p: 'ip-won-ha-da', t: 'Động từ', m: 'Nhập viện', ex: '다리를 다쳐서 병원에 입원했습니다. (Tôi bị thương ở chân nên đã nhập viện.)' },
+            { w: '작품', p: 'jak-pum', t: 'Danh từ', m: 'Tác phẩm', ex: '이것은 정말 훌륭한 예술 작품입니다. (Đây thực sự là một tác phẩm nghệ thuật xuất sắc.)' },
+            { w: '절대로', p: 'jeol-dae-ro', t: 'Phó từ', m: 'Tuyệt đối', ex: '약속을 절대로 잊지 마세요. (Tuyệt đối đừng quên lời hứa.)' },
+            { w: '피아노', p: 'pi-a-no', t: 'Danh từ', m: 'Đàn piano', ex: '어릴 때 피아노를 배웠습니다. (Tôi đã học đàn piano khi còn nhỏ.)' },
+            { w: '환자', p: 'hwan-ja', t: 'Danh từ', m: 'Bệnh nhân', ex: '의사가 환자를 치료합니다. (Bác sĩ chữa trị cho bệnh nhân.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-blue-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-blue-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

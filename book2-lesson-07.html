@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 7: Điện thoại (2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#4f46e5' } /* Indigo Theme for Communication */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 7: Điện thoại 2 (전화2)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 7</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Điện thoại (2)</h2>
+                <p class="text-indigo-100 opacity-90 max-w-lg">Từ vựng về các loại cuộc gọi, thao tác trên điện thoại và nhắn tin.</p>
+            </div>
+            <i class="ph-fill ph-phone-call absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Loại hình & Mã số (Types & Codes)
+            { w: '국제전화', p: 'guk-je-jeon-hwa', t: 'Danh từ', m: 'Điện thoại quốc tế', ex: '국제전화 요금이 비쌉니다. (Cước điện thoại quốc tế đắt.)' },
+            { w: '시외전화', p: 'si-oe-jeon-hwa', t: 'Danh từ', m: 'Điện thoại liên tỉnh', ex: '부산에 시외전화를 걸었습니다. (Tôi đã gọi điện thoại liên tỉnh đi Busan.)' },
+            { w: '시내전화', p: 'si-nae-jeon-hwa', t: 'Danh từ', m: 'Điện thoại nội hạt', ex: '시내전화는 요금이 저렴합니다. (Điện thoại nội hạt thì cước phí rẻ.)' },
+            { w: '국가 번호', p: 'guk-ga beon-ho', t: 'Danh từ', m: 'Mã quốc gia', ex: '한국의 국가 번호는 82입니다. (Mã quốc gia của Hàn Quốc là 82.)' },
+            { w: '지역 번호', p: 'ji-yeok beon-ho', t: 'Danh từ', m: 'Mã khu vực', ex: '서울의 지역 번호는 02입니다. (Mã khu vực của Seoul là 02.)' },
+
+            // 2. Hoạt động gọi điện (Calling Actions)
+            { w: '통화하다', p: 'tong-hwa-ha-da', t: 'Động từ', m: 'Nói chuyện qua điện thoại', ex: '친구와 오랫동안 통화했습니다. (Tôi đã nói chuyện điện thoại với bạn rất lâu.)' },
+            { w: '통화 중이다', p: 'tong-hwa jung-i-da', t: 'Động từ', m: 'Đang bận máy', ex: '지금은 통화 중입니다. (Bây giờ đang bận máy.)' },
+            { w: '자리에 없다', p: 'ja-ri-e eop-da', t: 'Cụm từ', m: 'Không có trong văn phòng', ex: '김 선생님은 지금 자리에 안 계십니다. (Thầy Kim hiện không có trong văn phòng.)' },
+            { w: '연결하다', p: 'yeon-gyeol-ha-da', t: 'Động từ', m: 'Kết nối', ex: '전화를 담당 부서에 연결했습니다. (Tôi đã kết nối điện thoại đến bộ phận phụ trách.)' },
+            { w: '메시지를 남기다', p: 'me-si-ji-reul nam-gi-da', t: 'Động từ', m: 'Để lại tin nhắn', ex: '부재중이라서 메시지를 남겼습니다. (Vì vắng mặt nên tôi đã để lại tin nhắn.)' },
+
+            // 3. Chức năng điện thoại & Tin nhắn (Phone Functions & SMS)
+            { w: '번호를 누르다', p: 'beon-ho-reul nu-reu-da', t: 'Động từ', m: 'Bấm số', ex: '전화 번호를 천천히 누르세요. (Hãy bấm số điện thoại từ từ.)' },
+            { w: '* 별표', p: 'byeol-pyo', t: 'Danh từ', m: 'Phím sao (*)', ex: '비밀번호를 누르고 별표를 누르세요. (Hãy ấn mật khẩu rồi ấn phím sao.)' },
+            { w: '# 우물 정자', p: 'u-mul jeong-ja', t: 'Danh từ', m: 'Phím thăng (#)', ex: '마지막에 우물 정자를 눌러 주세요. (Cuối cùng hãy ấn phím thăng.)' },
+            { w: '문자 메시지가 오다', p: 'mun-ja me-si-ji-ga o-da', t: 'Động từ', m: 'Có tin nhắn đến', ex: '친구에게서 문자 메시지가 왔습니다. (Có tin nhắn từ bạn tôi.)' },
+            { w: '문자 메시지를 보내다', p: 'mun-ja me-si-ji-reul bo-nae-da', t: 'Động từ', m: 'Gửi tin nhắn', ex: '약속 장소를 문자 메시지로 보냈습니다. (Tôi đã gửi địa điểm hẹn qua tin nhắn.)' },
+            { w: '전화기를 끄다', p: 'jeon-hwa-gi-reul kkeu-da', t: 'Động từ', m: 'Tắt điện thoại', ex: '극장에서는 전화기를 꺼 주세요. (Hãy tắt điện thoại trong rạp chiếu phim.)' },
+            { w: '진동으로 하다', p: 'jin-dong-eu-ro ha-da', t: 'Động từ', m: 'Để chế độ rung', ex: '회의 시간에는 진동으로 합니다. (Trong giờ họp tôi để chế độ rung.)' },
+            { w: '배터리가 나가다', p: 'bae-teo-ri-ga na-ga-da', t: 'Động từ', m: 'Hết pin', ex: '배터리가 나가서 전화를 못 받았습니다. (Điện thoại hết pin nên tôi không nhận được cuộc gọi.)' },
+
+            // 4. Từ mới khác (Other New Words)
+            { w: '곧', p: 'got', t: 'Phó từ', m: 'Ngay lập tức, sắp', ex: '수업이 곧 시작됩니다. (Lớp học sẽ bắt đầu ngay lập tức.)' },
+            { w: '관광', p: 'gwan-gwang', t: 'Danh từ', m: 'Du lịch', ex: '한국에 관광을 왔습니다. (Tôi đến Hàn Quốc để du lịch.)' },
+            { w: '끄다', p: 'kkeu-da', t: 'Động từ', m: 'Tắt', ex: '방을 나갈 때 불을 끄세요. (Hãy tắt đèn khi ra khỏi phòng.)' },
+            { w: '나가다', p: 'na-ga-da', t: 'Động từ', m: 'Đi ra', ex: '밖으로 나갑시다. (Chúng ta hãy đi ra ngoài.)' },
+            { w: '느리다', p: 'neu-ri-da', t: 'Tính từ', m: 'Chậm', ex: '거북이는 걸음이 느립니다. (Rùa đi chậm.)' },
+            { w: '담당자', p: 'dam-dang-ja', t: 'Danh từ', m: 'Người phụ trách', ex: '이 업무의 담당자가 누구입니까? (Người phụ trách công việc này là ai?)' },
+            { w: '드림', p: 'deu-rim', t: 'Danh từ', m: 'Kính thư', ex: '김철수 드림. (Kim Cheol-su kính thư.)' },
+            { w: '메모', p: 'me-mo', t: 'Danh từ', m: 'Ghi nhớ, ghi chú', ex: '중요한 사항을 메모했습니다. (Tôi đã ghi nhớ những mục quan trọng.)' },
+            { w: '물어보다', p: 'mul-eo-bo-da', t: 'Động từ', m: 'Hỏi', ex: '선생님께 모르는 것을 물어보세요. (Hãy hỏi giáo viên những điều không biết.)' },
+            { w: '부탁드리다', p: 'bu-tak-deu-ri-da', t: 'Động từ', m: 'Nhờ vả (kính ngữ)', ex: '도움을 부탁드립니다. (Tôi xin nhờ sự giúp đỡ.)' },
+            { w: '비행기 표', p: 'bi-haeng-gi pyo', t: 'Danh từ', m: 'Vé máy bay', ex: '제주도행 비행기 표를 샀습니다. (Tôi đã mua vé máy bay đi Jeju.)' },
+            { w: '빌리다', p: 'bil-li-da', t: 'Động từ', m: 'Mượn', ex: '친구에게 우산을 빌렸습니다. (Tôi đã mượn ô của bạn.)' },
+            { w: '상품', p: 'sang-pum', t: 'Danh từ', m: 'Sản phẩm', ex: '새로운 상품이 나왔습니다. (Sản phẩm mới đã ra mắt.)' },
+            { w: '성함', p: 'seong-ham', t: 'Danh từ', m: 'Họ tên (Kính ngữ)', ex: '성함이 어떻게 되십니까? (Họ tên của ngài là gì ạ?)' },
+            { w: '시티 투어 버스', p: 'si-ti tu-eo beo-seu', t: 'Danh từ', m: 'Xe buýt City Tour', ex: '시티 투어 버스를 타고 서울을 구경합니다. (Tôi đi tham quan Seoul bằng xe buýt du lịch thành phố.)' },
+            { w: '안내하다', p: 'an-nae-ha-da', t: 'Động từ', m: 'Hướng dẫn', ex: '직원이 길을 안내해 주었습니다. (Nhân viên đã hướng dẫn đường đi cho tôi.)' },
+            { w: '에 대해서', p: 'e dae-hae-seo', t: 'Cụm từ', m: 'Về, đối với', ex: '한국 역사에 대해서 배웁니다. (Tôi học về lịch sử Hàn Quốc.)' },
+            { w: '연결하다', p: 'yeon-gyeol-ha-da', t: 'Động từ', m: 'Nối (máy)', ex: '전화를 다른 부서로 연결합니다. (Nối máy sang bộ phận khác.)' },
+            { w: '연락드리다', p: 'yeol-lak-deu-ri-da', t: 'Động từ', m: 'Liên lạc (Kính ngữ)', ex: '제가 나중에 연락드리겠습니다. (Tôi sẽ liên lạc lại sau ạ.)' },
+            { w: '연락처', p: 'yeol-lak-cheo', t: 'Danh từ', m: 'Địa chỉ liên lạc', ex: '연락처를 남겨 주세요. (Hãy để lại địa chỉ liên lạc.)' },
+            { w: '예약되다', p: 'ye-yak-doe-da', t: 'Động từ', m: 'Được đặt trước', ex: '이 자리는 예약되었습니다. (Chỗ này đã được đặt trước.)' },
+            { w: '예약하다', p: 'ye-yak-ha-da', t: 'Động từ', m: 'Đặt trước', ex: '식당을 7시에 예약했습니다. (Tôi đã đặt nhà hàng lúc 7 giờ.)' },
+            { w: '외출 중이다', p: 'oe-chul jung-i-da', t: 'Động từ', m: 'Đang đi ra ngoài', ex: '사장님은 지금 외출 중이십니다. (Giám đốc hiện đang đi ra ngoài.)' },
+            { w: '이용하다', p: 'i-yong-ha-da', t: 'Động từ', m: 'Sử dụng', ex: '대중교통을 이용하세요. (Hãy sử dụng phương tiện giao thông công cộng.)' },
+            { w: '인사', p: 'in-sa', t: 'Danh từ', m: 'Chào hỏi', ex: '이웃을 만나면 반갑게 인사합니다. (Gặp hàng xóm thì chào hỏi vui vẻ.)' },
+            { w: '취소하다', p: 'chwi-so-ha-da', t: 'Động từ', m: 'Hủy bỏ', ex: '사정이 있어서 약속을 취소했습니다. (Vì có việc riêng nên tôi đã hủy hẹn.)' },
+            { w: '투어', p: 'tu-eo', t: 'Danh từ', m: 'Chuyến du lịch (Tour)', ex: '오늘 시티 투어를 할 겁니다. (Hôm nay tôi sẽ đi chuyến du lịch thành phố.)' },
+            { w: '팩스', p: 'paek-seu', t: 'Danh từ', m: 'Fax', ex: '서류를 팩스로 보내 주세요. (Hãy gửi tài liệu bằng fax cho tôi.)' },
+            { w: '한국학과', p: 'han-guk-hak-gwa', t: 'Danh từ', m: 'Khoa Hàn Quốc học', ex: '저는 대학교에서 한국학과를 전공합니다. (Tôi chuyên ngành Hàn Quốc học ở trường đại học.)' },
+            { w: '확인하다', p: 'hwa-gin-ha-da', t: 'Động từ', m: 'Xác nhận', ex: '예약 날짜를 확인했습니다. (Tôi đã xác nhận ngày đặt hẹn.)' }
+        ];
+
+        const tbody = document.getElementById('table-body');
+        document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+        let html = '';
+        vocabularyList.forEach((item, index) => {
+            html += `
+            <tr class="hover:bg-indigo-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-indigo-100 transition-all">${item.ex}</div></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    </script>
+</body>
+</html>

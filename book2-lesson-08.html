@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 8: Phim ảnh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#e11d48' } /* Rose Theme for Cinema/Red Carpet */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 8: Phim ảnh (영화)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-rose-600 to-red-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 8</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Phim ảnh</h2>
+                <p class="text-rose-100 opacity-90 max-w-lg">Từ vựng về cảm xúc, thể loại phim và các thuật ngữ điện ảnh.</p>
+            </div>
+            <i class="ph-fill ph-film-strip absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Cảm xúc (Emotions)
+            { w: '기쁘다', p: 'gi-ppeu-da', t: 'Tính từ', m: 'Vui, mừng', ex: '선물을 받아서 기쁩니다. (Tôi vui vì nhận được quà.)' },
+            { w: '슬프다', p: 'seul-peu-da', t: 'Tính từ', m: 'Buồn', ex: '슬픈 영화를 보고 울었습니다. (Tôi đã khóc khi xem phim buồn.)' },
+            { w: '행복하다', p: 'haeng-bok-ha-da', t: 'Tính từ', m: 'Hạnh phúc', ex: '가족과 함께 있어서 행복합니다. (Tôi hạnh phúc vì được ở bên gia đình.)' },
+            { w: '불행하다', p: 'bul-haeng-ha-da', t: 'Tính từ', m: 'Bất hạnh', ex: '그는 자신이 불행하다고 생각합니다. (Anh ấy nghĩ rằng mình bất hạnh.)' },
+            { w: '즐겁다', p: 'jeul-geop-da', t: 'Tính từ', m: 'Vui (thích thú)', ex: '여행은 항상 즐겁습니다. (Du lịch lúc nào cũng vui vẻ.)' },
+            { w: '지루하다', p: 'ji-ru-ha-da', t: 'Tính từ', m: 'Buồn tẻ, chán', ex: '수업 시간이 지루합니다. (Giờ học buồn tẻ.)' },
+            { w: '외롭다', p: 'oe-rop-da', t: 'Tính từ', m: 'Cô đơn', ex: '혼자 살아서 외롭습니다. (Tôi cô đơn vì sống một mình.)' },
+            { w: '우울하다', p: 'u-ul-ha-da', t: 'Tính từ', m: 'Buồn rầu, ảm đạm', ex: '비가 오면 기분이 우울합니다. (Trời mưa thì tâm trạng buồn rầu.)' },
+            { w: '심심하다', p: 'sim-sim-ha-da', t: 'Tính từ', m: 'Buồn chán (rảnh)', ex: '할 일이 없어서 심심합니다. (Tôi buồn chán vì không có việc gì làm.)' },
+            { w: '무섭다', p: 'mu-seop-da', t: 'Tính từ', m: 'Sợ hãi, đáng sợ', ex: '밤길이 무섭습니다. (Đường ban đêm thật đáng sợ.)' },
+            { w: '놀라다', p: 'nol-la-da', t: 'Động từ', m: 'Ngạc nhiên, giật mình', ex: '갑자기 큰 소리가 나서 놀랐습니다. (Tôi ngạc nhiên vì tiếng động lớn đột ngột.)' },
+            { w: '웃기다', p: 'ut-gi-da', t: 'Tính từ', m: 'Buồn cười', ex: '이 코미디 영화는 정말 웃깁니다. (Bộ phim hài này thực sự buồn cười.)' },
+            { w: '웃다', p: 'ut-da', t: 'Động từ', m: 'Cười', ex: '아이들이 밝게 웃습니다. (Lũ trẻ cười tươi.)' },
+            { w: '울다', p: 'ul-da', t: 'Động từ', m: 'Khóc', ex: '아기가 배가 고파서 웁니다. (Em bé khóc vì đói bụng.)' },
+            { w: '신나다', p: 'sin-na-da', t: 'Động từ', m: 'Thích thú, hứng khởi', ex: '내일 소풍을 가서 신납니다. (Tôi hứng khởi vì ngày mai đi dã ngoại.)' },
+            { w: '화나다', p: 'hwa-na-da', t: 'Động từ', m: 'Giận dữ, cáu', ex: '친구가 약속을 어겨서 화났습니다. (Tôi giận vì bạn thất hẹn.)' },
+            { w: '졸리다', p: 'jol-li-da', t: 'Động từ', m: 'Buồn ngủ', ex: '점심을 먹은 후에 졸립니다. (Tôi buồn ngủ sau khi ăn trưa.)' },
+            { w: '그립다', p: 'geu-rip-da', t: 'Tính từ', m: 'Nhớ nhung', ex: '고향에 계신 부모님이 그립습니다. (Tôi nhớ bố mẹ ở quê.)' },
+
+            // 2. Thể loại phim (Movie Genres)
+            { w: '멜로 영화', p: 'mel-lo yeong-hwa', t: 'Danh từ', m: 'Phim tâm lý xã hội / Tình cảm', ex: '저는 슬픈 멜로 영화를 좋아합니다. (Tôi thích phim tâm lý xã hội buồn.)' },
+            { w: '공포 영화', p: 'gong-po yeong-hwa', t: 'Danh từ', m: 'Phim kinh dị', ex: '여름에는 공포 영화가 인기입니다. (Mùa hè thì phim kinh dị rất phổ biến.)' },
+            { w: '에스에프(SF) 영화', p: 'e-seu-e-peu (SF) yeong-hwa', t: 'Danh từ', m: 'Phim khoa học viễn tưởng', ex: '우주를 배경으로 한 SF 영화를 봤습니다. (Tôi đã xem phim khoa học viễn tưởng lấy bối cảnh vũ trụ.)' },
+            { w: '액션 영화', p: 'aek-syeon yeong-hwa', t: 'Danh từ', m: 'Phim hành động', ex: '남자들은 보통 액션 영화를 좋아합니다. (Con trai thường thích phim hành động.)' },
+            { w: '코미디 영화', p: 'ko-mi-di yeong-hwa', t: 'Danh từ', m: 'Phim hài', ex: '코미디 영화를 보고 많이 웃었습니다. (Tôi đã xem phim hài và cười rất nhiều.)' },
+
+            // 3. Từ vựng điện ảnh (Movie Terms)
+            { w: '영화 제목', p: 'yeong-hwa je-mok', t: 'Danh từ', m: 'Tên phim', ex: '그 영화 제목이 기억나지 않습니다. (Tôi không nhớ tên bộ phim đó.)' },
+            { w: '영화감독', p: 'yeong-hwa gam-dok', t: 'Danh từ', m: 'Đạo diễn phim', ex: '봉준호는 유명한 영화감독입니다. (Bong Joon-ho là đạo diễn phim nổi tiếng.)' },
+            { w: '영화배우', p: 'yeong-hwa bae-u', t: 'Danh từ', m: 'Diễn viên điện ảnh', ex: '좋아하는 영화배우가 누구입니까? (Diễn viên bạn thích là ai?)' },
+            { w: '팬', p: 'paen', t: 'Danh từ', m: 'Người hâm mộ (Fan)', ex: '저는 그 가수의 팬입니다. (Tôi là người hâm mộ của ca sĩ đó.)' },
+            { w: '연기하다', p: 'yeon-gi-ha-da', t: 'Động từ', m: 'Diễn xuất', ex: '배우가 실감 나게 연기합니다. (Diễn viên diễn xuất rất chân thực.)' },
+            { w: '상영하다', p: 'sang-yeong-ha-da', t: 'Động từ', m: 'Trình chiếu', ex: '지금 극장에서 무슨 영화를 상영합니까? (Bây giờ ở rạp đang chiếu phim gì?)' },
+            { w: '매표소', p: 'mae-pyo-so', t: 'Danh từ', m: 'Nơi bán vé', ex: '매표소에서 표를 샀습니다. (Tôi đã mua vé tại quầy bán vé.)' },
+            { w: '영화 표', p: 'yeong-hwa pyo', t: 'Danh từ', m: 'Vé xem phim', ex: '주말 영화 표를 예매했습니다. (Tôi đã đặt trước vé xem phim cuối tuần.)' },
+            { w: '영화관', p: 'yeong-hwa-gwan', t: 'Danh từ', m: 'Rạp chiếu phim', ex: '영화관에서 팝콘을 먹습니다. (Tôi ăn bỏng ngô ở rạp chiếu phim.)' },
+            { w: '상영 시간', p: 'sang-yeong si-gan', t: 'Danh từ', m: 'Giờ chiếu', ex: '영화 상영 시간을 확인하세요. (Hãy kiểm tra giờ chiếu phim.)' },
+            { w: '예매', p: 'ye-mae', t: 'Danh từ', m: 'Việc đặt mua trước', ex: '인터넷 예매가 편리합니다. (Việc đặt mua trước qua internet rất tiện lợi.)' },
+            { w: '매진', p: 'mae-jin', t: 'Danh từ', m: 'Bán hết (vé)', ex: '표가 매진되었습니다. (Vé đã bán hết.)' },
+
+            // 4. Từ mới khác (Other New Words)
+            { w: '값', p: 'gap', t: 'Danh từ', m: 'Giá', ex: '물건 값이 비쌉니다. (Giá món đồ đắt.)' },
+            { w: '검색하다', p: 'geom-saek-ha-da', t: 'Động từ', m: 'Tìm kiếm (thông tin)', ex: '인터넷으로 정보를 검색합니다. (Tôi tìm kiếm thông tin trên internet.)' },
+            { w: '경치', p: 'gyeong-chi', t: 'Danh từ', m: 'Cảnh trí, phong cảnh', ex: '설악산의 경치가 아름답습니다. (Cảnh trí núi Seorak rất đẹp.)' },
+            { w: '기사', p: 'gi-sa', t: 'Danh từ', m: 'Tài xế', ex: '택시 기사님께 길을 물었습니다. (Tôi đã hỏi đường tài xế taxi.)' },
+            { w: '날씬하다', p: 'nal-ssin-ha-da', t: 'Tính từ', m: 'Thon thả, gầy', ex: '그녀는 키가 크고 날씬합니다. (Cô ấy cao và thon thả.)' },
+            { w: '미래', p: 'mi-rae', t: 'Danh từ', m: 'Tương lai', ex: '미래에 부자가 되고 싶습니다. (Trong tương lai tôi muốn trở thành người giàu.)' },
+            { w: '바다낚시', p: 'ba-da-nak-si', t: 'Danh từ', m: 'Câu cá biển', ex: '주말에 바다낚시를 하러 갑니다. (Cuối tuần tôi đi câu cá ở biển.)' },
+            { w: '사랑', p: 'sa-rang', t: 'Danh từ', m: 'Tình yêu', ex: '사랑에는 국경이 없습니다. (Tình yêu không có biên giới.)' },
+            { w: '상상하다', p: 'sang-sang-ha-da', t: 'Động từ', m: 'Tưởng tượng', ex: '미래의 모습을 상상해 보세요. (Hãy thử tưởng tượng hình ảnh tương lai.)' },
+            { w: '소중하다', p: 'so-jung-ha-da', t: 'Tính từ', m: 'Quý trọng, quan trọng', ex: '가족은 저에게 소중합니다. (Gia đình đối với tôi rất quý trọng.)' },
+            { w: '속', p: 'sok', t: 'Danh từ', m: 'Bên trong', ex: '가방 속에 책이 있습니다. (Trong cặp có sách.)' },
+            { w: '애인', p: 'ae-in', t: 'Danh từ', m: 'Người yêu', ex: '애인과 데이트를 합니다. (Tôi hẹn hò với người yêu.)' },
+            { w: '연기', p: 'yeon-gi', t: 'Danh từ', m: 'Diễn xuất', ex: '그 배우는 연기를 잘합니다. (Diễn viên đó diễn xuất giỏi.)' },
+            { w: '우주', p: 'u-ju', t: 'Danh từ', m: 'Vũ trụ', ex: '우주 여행을 꿈꿉니다. (Tôi mơ ước du lịch vũ trụ.)' },
+            { w: '이별', p: 'i-byeol', t: 'Danh từ', m: 'Chia ly, ly biệt', ex: '이별은 항상 슬픕니다. (Sự chia ly lúc nào cũng buồn.)' },
+            { w: '인기', p: 'in-gi', t: 'Danh từ', m: 'Sức hút, sự yêu thích', ex: '이 가수는 인기가 많습니다. (Ca sĩ này được yêu thích nhiều.)' },
+            { w: '잘생기다', p: 'jal-saeng-gi-da', t: 'Tính từ', m: 'Đẹp trai', ex: '그 남자는 정말 잘생겼습니다. (Người đàn ông đó thực sự đẹp trai.)' },
+            { w: '전쟁', p: 'jeon-jaeng', t: 'Danh từ', m: 'Chiến tranh', ex: '전쟁이 끝나고 평화가 왔습니다. (Chiến tranh kết thúc và hòa bình đã đến.)' },
+            { w: '최고', p: 'choe-go', t: 'Danh từ', m: 'Tốt nhất, tuyệt nhất', ex: '당신이 최고입니다. (Bạn là số một.)' },
+            { w: '판매', p: 'pan-mae', t: 'Danh từ', m: 'Bán hàng', ex: '상품 판매가 늘었습니다. (Việc bán sản phẩm đã tăng lên.)' },
+            { w: '편', p: 'pyeon', t: 'Danh từ', m: 'Phe, phía', ex: '우리 편이 이겼습니다. (Phe chúng tôi đã thắng.)' }
+        ];
+
+        const tbody = document.getElementById('table-body');
+        document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+        let html = '';
+        vocabularyList.forEach((item, index) => {
+            html += `
+            <tr class="hover:bg-rose-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-rose-100 transition-all">${item.ex}</div></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    </script>
+</body>
+</html>

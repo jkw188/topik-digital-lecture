@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 10: Ngoại hình</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#8b5cf6' } /* Violet Theme for Appearance/Fashion */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 10: Ngoại hình (외모)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 10</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Ngoại hình</h2>
+                <p class="text-violet-100 opacity-90 max-w-lg">Từ vựng về màu sắc, trang phục, phụ kiện và miêu tả ngoại hình.</p>
+            </div>
+            <i class="ph-fill ph-t-shirt absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Màu sắc (Colors)
+            { w: '빨간색', p: 'ppal-gan-saek', t: 'Danh từ', m: 'màu đỏ', ex: '저는 빨간색 사과를 좋아합니다. (Tôi thích táo màu đỏ.)' },
+            { w: '노란색', p: 'no-ran-saek', t: 'Danh từ', m: 'màu vàng', ex: '유치원생들이 노란색 모자를 썼습니다. (Các em mẫu giáo đội mũ màu vàng.)' },
+            { w: '파란색', p: 'pa-ran-saek', t: 'Danh từ', m: 'màu xanh da trời', ex: '하늘이 파란색입니다. (Bầu trời màu xanh da trời.)' },
+            { w: '하얀색', p: 'ha-yan-saek', t: 'Danh từ', m: 'màu trắng', ex: '겨울에는 하얀색 눈이 내립니다. (Vào mùa đông tuyết trắng rơi.)' },
+            { w: '까만색', p: 'kka-man-saek', t: 'Danh từ', m: 'màu đen', ex: '까만색 구두를 신었습니다. (Tôi đã đi đôi giày màu đen.)' },
+            { w: '녹색', p: 'nok-saek', t: 'Danh từ', m: 'màu xanh lá cây', ex: '산이 녹색으로 변했습니다. (Núi đã chuyển sang màu xanh lá cây.)' },
+            { w: '갈색', p: 'gal-saek', t: 'Danh từ', m: 'màu xám/nâu', ex: '갈색 가방을 샀습니다. (Tôi đã mua cái túi màu nâu.)' },
+
+            // 2. Mặc và cởi (Wearing & Taking off)
+            { w: '입다', p: 'ip-da', t: 'Động từ', m: 'mặc (quần áo)', ex: '날씨가 추워서 코트를 입습니다. (Thời tiết lạnh nên tôi mặc áo khoác.)' },
+            { w: '벗다', p: 'beot-da', t: 'Động từ', m: 'cởi ra', ex: '집에 들어오면 신발을 벗습니다. (Vào nhà thì tôi cởi giày ra.)' },
+            { w: '신다', p: 'sin-da', t: 'Động từ', m: 'đi, mang (giày, tất)', ex: '운동화를 신고 운동합니다. (Tôi đi giày thể thao và tập thể dục.)' },
+            { w: '쓰다', p: 'sseu-da', t: 'Động từ', m: 'đội (mũ), đeo (kính)', ex: '여름에 모자를 씁니다. (Tôi đội mũ vào mùa hè.)' },
+            { w: '끼다', p: 'kki-da', t: 'Động từ', m: 'đeo (nhẫn, găng tay)', ex: '반지를 손가락에 낍니다. (Tôi đeo nhẫn vào ngón tay.)' },
+            { w: '메다', p: 'me-da', t: 'Động từ', m: 'đeo, khoác (ba lô)', ex: '가방을 어깨에 멥니다. (Tôi đeo cặp lên vai.)' },
+
+            // 3. Ngoại hình & Tóc (Appearance & Hair)
+            { w: '긴 머리', p: 'gin meo-ri', t: 'Danh từ', m: 'tóc dài', ex: '그녀는 긴 머리가 아름답습니다. (Cô ấy có mái tóc dài đẹp.)' },
+            { w: '짧은 머리', p: 'jjal-beun meo-ri', t: 'Danh từ', m: 'tóc ngắn', ex: '여름에는 짧은 머리가 시원합니다. (Mùa hè tóc ngắn thì mát mẻ.)' },
+            { w: '단발머리', p: 'dan-bal-meo-ri', t: 'Danh từ', m: 'tóc tém, tóc ngắn ngang vai', ex: '단발머리로 스타일을 바꿨습니다. (Tôi đã đổi kiểu sang tóc tém.)' },
+            { w: '파마머리', p: 'pa-ma-meo-ri', t: 'Danh từ', m: 'tóc uốn', ex: '파마머리가 잘 어울립니다. (Tóc uốn rất hợp với bạn.)' },
+            { w: '생머리', p: 'saeng-meo-ri', t: 'Danh từ', m: 'tóc thẳng tự nhiên', ex: '그녀는 긴 생머리를 하고 있습니다. (Cô ấy để tóc dài tự nhiên.)' },
+            { w: '날씬하다', p: 'nal-ssin-ha-da', t: 'Tính từ', m: 'mảnh mai', ex: '운동을 해서 몸이 날씬합니다. (Tập thể dục nên dáng người mảnh mai.)' },
+            { w: '보통이다', p: 'bo-tong-i-da', t: 'Tính từ', m: 'bình thường', ex: '키가 크지도 작지도 않고 보통입니다. (Chiều cao không cao cũng không thấp, bình thường.)' },
+            { w: '통통하다', p: 'tong-tong-ha-da', t: 'Tính từ', m: 'đầy đặn, mũm mĩm', ex: '볼이 통통해서 귀엽습니다. (Má đầy đặn nên đáng yêu.)' },
+            { w: '잘생겼다', p: 'jal-saeng-gyeot-da', t: 'Tính từ', m: 'đẹp trai', ex: '그 배우는 정말 잘생겼습니다. (Nam diễn viên đó thực sự đẹp trai.)' },
+            { w: '멋있다', p: 'meot-it-da', t: 'Tính từ', m: 'ngầu, phong cách, đẹp', ex: '오늘 입은 정장이 멋있습니다. (Bộ vest hôm nay mặc rất phong cách.)' },
+            { w: '예쁘다', p: 'ye-ppeu-da', t: 'Tính từ', m: 'xinh đẹp', ex: '꽃이 예쁘게 피었습니다. (Hoa đã nở xinh đẹp.)' },
+            { w: '귀엽다', p: 'gwi-yeop-da', t: 'Tính từ', m: 'đáng yêu', ex: '아기 웃음이 정말 귀엽습니다. (Nụ cười em bé thật đáng yêu.)' },
+            { w: '닮다', p: 'dam-da', t: 'Động từ', m: 'giống (với)', ex: '딸이 엄마를 많이 닮았습니다. (Con gái rất giống mẹ.)' },
+            { w: '부지런하다', p: 'bu-ji-reon-ha-da', t: 'Tính từ', m: 'cần cù', ex: '그는 아침 일찍 일어나는 부지런한 사람입니다. (Anh ấy là người cần cù dậy sớm vào buổi sáng.)' },
+            { w: '활발하다', p: 'hwal-bal-ha-da', t: 'Tính từ', m: 'nhanh nhẹn, hoạt bát', ex: '성격이 활발해서 친구가 많습니다. (Vì tính cách hoạt bát nên tôi có nhiều bạn.)' },
+
+            // 4. Đồ dùng & Phụ kiện (Items & Accessories)
+            { w: '가죽', p: 'ga-juk', t: 'Danh từ', m: 'da (chất liệu)', ex: '이 지갑은 가죽으로 만들었습니다. (Cái ví này được làm bằng da.)' },
+            { w: '다이어트', p: 'da-i-eo-teu', t: 'Danh từ', m: 'ăn kiêng', ex: '건강을 위해 다이어트를 합니다. (Tôi ăn kiêng vì sức khỏe.)' },
+            { w: '선풍기', p: 'seon-pung-gi', t: 'Danh từ', m: 'quạt máy', ex: '더워서 선풍기를 켰습니다. (Vì nóng nên tôi đã bật quạt máy.)' },
+            { w: '열쇠고리', p: 'yeol-soe-go-ri', t: 'Danh từ', m: 'móc treo khóa', ex: '기념품으로 열쇠고리를 샀습니다. (Tôi đã mua móc treo khóa làm quà lưu niệm.)' },
+            { w: '운동복', p: 'un-dong-bok', t: 'Danh từ', m: 'quần áo thể thao', ex: '편한 운동복을 입고 산책합니다. (Tôi mặc quần áo thể thao thoải mái và đi dạo.)' },
+            { w: '주머니', p: 'ju-meo-ni', t: 'Danh từ', m: 'túi (quần/áo)', ex: '주머니에 동전이 있습니다. (Trong túi có tiền xu.)' },
+            { w: '지퍼', p: 'ji-peo', t: 'Danh từ', m: 'khóa kéo', ex: '옷의 지퍼를 올리세요. (Hãy kéo khóa áo lên.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-violet-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-violet-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

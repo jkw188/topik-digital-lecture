@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 15: Cuộc sống tại Hàn Quốc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#0d9488' } /* Teal Theme for Life/Adaptation */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 15: Cuộc sống tại Hàn Quốc (한국 생활)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 15</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Cuộc sống tại Hàn Quốc</h2>
+                <p class="text-teal-100 opacity-90 max-w-lg">Từ vựng về sự thích nghi, sinh hoạt phí và các thủ tục hành chính.</p>
+            </div>
+            <i class="ph-fill ph-house-line absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Thích nghi cuộc sống (Adaptation)
+            { w: '익숙하다', p: 'ik-suk-ha-da', t: 'Tính từ', m: 'Quen, thành thạo', ex: '한국 생활에 익숙합니다. (Tôi quen với cuộc sống ở Hàn Quốc.)' },
+            { w: '적응하다', p: 'jeok-eung-ha-da', t: 'Động từ', m: 'Thích ứng', ex: '새로운 환경에 빨리 적응했습니다. (Tôi đã thích ứng nhanh với môi trường mới.)' },
+            { w: '익숙해지다', p: 'ik-suk-hae-ji-da', t: 'Động từ', m: 'Trở nên quen', ex: '매운 음식에 익숙해졌습니다. (Tôi đã quen dần với đồ ăn cay.)' },
+            { w: '외롭다', p: 'oe-rop-da', t: 'Tính từ', m: 'Cô đơn', ex: '가족이 보고 싶어서 외롭습니다. (Tôi cô đơn vì nhớ gia đình.)' },
+            { w: '낯설다', p: 'nat-seol-da', t: 'Tính từ', m: 'Lạ lẫm, không quen', ex: '처음에는 모든 것이 낯설었습니다. (Ban đầu mọi thứ đều lạ lẫm.)' },
+            { w: '불편하다', p: 'bul-pyeon-ha-da', t: 'Tính từ', m: 'Bất tiện', ex: '교통이 불편합니다. (Giao thông bất tiện.)' },
+
+            // 2. Thủ tục & Dịch vụ (Procedures & Services)
+            { w: '외국인 등록증', p: 'oe-guk-in deung-rok-jeung', t: 'Danh từ', m: 'Thẻ đăng ký người nước ngoài', ex: '외국인 등록증을 항상 가지고 다닙니다. (Tôi luôn mang theo thẻ đăng ký người nước ngoài.)' },
+            { w: '출입국관리사무소', p: 'chul-ip-guk-gwan-ri-sa-mu-so', t: 'Danh từ', m: 'Cục quản lý xuất nhập cảnh', ex: '비자 연장을 위해 출입국관리사무소에 갑니다. (Tôi đi đến Cục quản lý xuất nhập cảnh để gia hạn visa.)' },
+            { w: '교통 카드', p: 'gyo-tong ka-deu', t: 'Danh từ', m: 'Thẻ giao thông', ex: '지하철을 탈 때 교통 카드를 씁니다. (Tôi dùng thẻ giao thông khi đi tàu điện ngầm.)' },
+            { w: '현금카드', p: 'hyeon-geum-ka-deu', t: 'Danh từ', m: 'Thẻ tiền mặt', ex: '현금카드로 돈을 인출합니다. (Tôi rút tiền bằng thẻ tiền mặt.)' },
+            { w: '통장을 만들다', p: 'tong-jang-eul man-deul-da', t: 'Cụm động từ', m: 'Làm sổ tài khoản', ex: '은행에서 통장을 만들었습니다. (Tôi đã làm sổ tài khoản ở ngân hàng.)' },
+            { w: '환전하다', p: 'hwan-jeon-ha-da', t: 'Động từ', m: 'Đổi tiền', ex: '여행 가기 전에 환전했습니다. (Tôi đã đổi tiền trước khi đi du lịch.)' },
+
+            // 3. Nhà ở & Sinh hoạt (Housing & Living)
+            { w: '기숙사', p: 'gi-suk-sa', t: 'Danh từ', m: 'Ký túc xá', ex: '학교 기숙사에서 생활합니다. (Tôi sinh hoạt ở ký túc xá trường.)' },
+            { w: '자취(방)', p: 'ja-chwi-(bang)', t: 'Danh từ', m: 'Phòng trọ (tự nấu ăn)', ex: '학교 근처에서 자취를 합니다. (Tôi tự thuê phòng sống ở gần trường.)' },
+            { w: '하숙집', p: 'ha-suk-jip', t: 'Danh từ', m: 'Nhà trọ (có chủ nấu ăn)', ex: '하숙집 아주머니가 친절합니다. (Cô chủ nhà trọ rất thân thiện.)' },
+            { w: '위치', p: 'wi-chi', t: 'Danh từ', m: 'Vị trí', ex: '집 위치가 지하철역과 가깝습니다. (Vị trí nhà gần ga tàu điện ngầm.)' },
+            { w: '룸메이트', p: 'rum-me-i-teu', t: 'Danh từ', m: 'Bạn cùng phòng', ex: '룸메이트와 함께 방을 씁니다. (Tôi dùng chung phòng với bạn cùng phòng.)' },
+            { w: '보증금', p: 'bo-jeung-geum', t: 'Danh từ', m: 'Tiền đặt cọc', ex: '보증금이 비쌉니다. (Tiền đặt cọc đắt.)' },
+            { w: '월세', p: 'wol-se', t: 'Danh từ', m: 'Tiền thuê hàng tháng', ex: '매달 월세를 내야 합니다. (Phải trả tiền thuê hàng tháng.)' },
+            { w: '비용', p: 'bi-yong', t: 'Danh từ', m: 'Chi phí', ex: '생활 비용을 계산합니다. (Tính toán chi phí sinh hoạt.)' },
+            { w: '인터넷 요금', p: 'in-teo-net yo-geum', t: 'Danh từ', m: 'Cước internet', ex: '인터넷 요금은 별도입니다. (Cước internet tính riêng.)' },
+            { w: '가스 요금', p: 'ga-seu yo-geum', t: 'Danh từ', m: 'Tiền ga', ex: '난방을 많이 해서 가스 요금이 많이 나왔습니다. (Vì sưởi nhiều nên tiền ga ra nhiều.)' },
+            { w: '비용이 들다', p: 'bi-yong-i deul-da', t: 'Cụm động từ', m: 'Tốn chi phí', ex: '이사하는 데 비용이 많이 듭니다. (Việc chuyển nhà tốn nhiều chi phí.)' },
+            { w: '요금을 내다', p: 'yo-geum-eul nae-da', t: 'Cụm động từ', m: 'Trả phí', ex: '전기 요금을 냈습니다. (Tôi đã trả tiền điện.)' },
+            { w: '이사하다', p: 'i-sa-ha-da', t: 'Động từ', m: 'Chuyển nhà', ex: '다음 달에 서울로 이사합니다. (Tháng sau tôi chuyển nhà đến Seoul.)' },
+
+            // 4. Từ vựng khác (Other Vocabulary)
+            { w: '가능하다', p: 'ga-neung-ha-da', t: 'Tính từ', m: 'Có khả năng', ex: '주말에 배달이 가능합니까? (Cuối tuần có khả năng giao hàng không?)' },
+            { w: '궁금하다', p: 'gung-geum-ha-da', t: 'Tính từ', m: 'Thắc mắc, tò mò', ex: '시험 결과가 궁금합니다. (Tôi thắc mắc về kết quả thi.)' },
+            { w: '규칙', p: 'gyu-chik', t: 'Danh từ', m: 'Quy tắc', ex: '기숙사 규칙을 지켜야 합니다. (Phải tuân thủ quy tắc ký túc xá.)' },
+            { w: '그릇', p: 'geu-reut', t: 'Danh từ', m: 'Bát, chén', ex: '그릇에 밥을 담습니다. (Xới cơm vào bát.)' },
+            { w: '깨끗하다', p: 'kkae-kkeut-ha-da', t: 'Tính từ', m: 'Sạch sẽ', ex: '방을 청소해서 깨끗합니다. (Tôi dọn phòng nên sạch sẽ.)' },
+            { w: '답변', p: 'dap-byeon', t: 'Danh từ', m: 'Câu trả lời, hồi âm', ex: '빠른 답변 부탁드립니다. (Xin vui lòng trả lời nhanh.)' },
+            { w: '따로', p: 'tta-ro', t: 'Phó từ', m: 'Riêng rẽ, riêng', ex: '계산은 따로 해 주세요. (Hãy tính tiền riêng cho tôi.)' },
+            { w: '똑똑하다', p: 'ttok-ttok-ha-da', t: 'Tính từ', m: 'Thông minh', ex: '그 학생은 정말 똑똑합니다. (Học sinh đó thật sự thông minh.)' },
+            { w: '마다', p: 'ma-da', t: 'Trợ từ', m: 'Mỗi', ex: '일요일마다 등산을 갑니다. (Tôi đi leo núi mỗi chủ nhật.)' },
+            { w: '문의', p: 'mun-ui', t: 'Danh từ', m: 'Hỏi, thắc mắc', ex: '전화로 문의해 보세요. (Hãy thử hỏi qua điện thoại.)' },
+            { w: '부엌', p: 'bu-eok', t: 'Danh từ', m: 'Bếp', ex: '부엌에서 요리를 합니다. (Tôi nấu ăn trong bếp.)' },
+            { w: '비다', p: 'bi-da', t: 'Động từ', m: 'Trống, rỗng', ex: '빈 방이 있습니까? (Có phòng trống không?)' },
+            { w: '생기다', p: 'saeng-gi-da', t: 'Động từ', m: 'Xảy ra, phát sinh', ex: '급한 일이 생겼습니다. (Đã xảy ra việc gấp.)' },
+            { w: '선배', p: 'seon-bae', t: 'Danh từ', m: 'Tiền bối', ex: '학교 선배에게 도움을 받았습니다. (Tôi đã nhận được sự giúp đỡ từ tiền bối ở trường.)' },
+            { w: '소포', p: 'so-po', t: 'Danh từ', m: 'Bưu kiện', ex: '우체국에서 소포를 받았습니다. (Tôi đã nhận bưu kiện ở bưu điện.)' },
+            { w: '시끄럽다', p: 'si-kkeu-reop-da', t: 'Tính từ', m: 'Ồn ào', ex: '밖이 시끄러워서 창문을 닫았습니다. (Bên ngoài ồn ào nên tôi đã đóng cửa sổ.)' },
+            { w: '식탁', p: 'sik-tak', t: 'Danh từ', m: 'Bàn ăn', ex: '식탁 위에 사과가 있습니다. (Trên bàn ăn có quả táo.)' },
+            { w: '신경 쓰다', p: 'sin-gyeong sseu-da', t: 'Cụm động từ', m: 'Để tâm, chú ý', ex: '작은 실수에도 신경 씁니다. (Tôi để tâm đến cả lỗi nhỏ.)' },
+            { w: '아끼다', p: 'a-kki-da', t: 'Động từ', m: 'Tiết kiệm', ex: '물을 아껴 씁시다. (Chúng ta hãy dùng tiết kiệm nước.)' },
+            { w: '옷장', p: 'ot-jang', t: 'Danh từ', m: 'Tủ quần áo', ex: '옷장에 옷을 정리합니다. (Tôi sắp xếp quần áo vào tủ áo.)' },
+            { w: '잘되다', p: 'jal-doe-da', t: 'Động từ', m: 'Trôi chảy, tốt đẹp', ex: '사업이 잘되고 있습니다. (Việc kinh doanh đang diễn ra tốt đẹp.)' },
+            { w: '조용하다', p: 'jo-yong-ha-da', t: 'Tính từ', m: 'Yên tĩnh', ex: '도서관이 아주 조용합니다. (Thư viện rất yên tĩnh.)' },
+            { w: '주인', p: 'ju-in', t: 'Danh từ', m: 'Chủ nhân', ex: '이 가게의 주인이 누구입니까? (Chủ của cửa hàng này là ai?)' },
+            { w: '직접', p: 'jik-jeop', t: 'Phó từ', m: 'Trực tiếp', ex: '제가 직접 만들었습니다. (Tôi đã trực tiếp làm.)' },
+            { w: '출근하다', p: 'chul-geun-ha-da', t: 'Động từ', m: 'Đi làm', ex: '매일 아침 9시까지 출근합니다. (Tôi đi làm trước 9 giờ sáng mỗi ngày.)' },
+            { w: '포함되다', p: 'po-ham-doe-da', t: 'Động từ', m: 'Được bao gồm', ex: '세금이 가격에 포함되어 있습니다. (Thuế được bao gồm trong giá.)' },
+            { w: '혹시', p: 'hok-si', t: 'Phó từ', m: 'Liệu, có lẽ', ex: '혹시 시간이 있습니까? (Liệu bạn có thời gian không?)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-teal-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-teal-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

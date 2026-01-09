@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 11: Du lịch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#0891b2' } /* Cyan Theme for Travel */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 11: Du lịch (여행)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 11</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Du lịch</h2>
+                <p class="text-cyan-100 opacity-90 max-w-lg">Từ vựng về các loại hình du lịch, chuẩn bị hành lý và địa điểm tham quan.</p>
+            </div>
+            <i class="ph-fill ph-airplane-tilt absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Loại hình du lịch (Types of Travel)
+            { w: '국내 여행', p: 'gung-nae yeo-haeng', t: 'Danh từ', m: 'Du lịch trong nước', ex: '이번 휴가에는 국내 여행을 계획하고 있습니다. (Kỳ nghỉ này tôi đang lên kế hoạch du lịch trong nước.)' },
+            { w: '신혼여행', p: 'sin-hon-yeo-haeng', t: 'Danh từ', m: 'Tuần trăng mật', ex: '제주도로 신혼여행을 다녀왔습니다. (Tôi đã đi tuần trăng mật ở đảo Jeju.)' },
+            { w: '가족 여행', p: 'ga-jok yeo-haeng', t: 'Danh từ', m: 'Du lịch gia đình', ex: '주말에 가족 여행을 떠납니다. (Cuối tuần tôi đi du lịch gia đình.)' },
+            { w: '해외여행', p: 'hae-oe-yeo-haeng', t: 'Danh từ', m: 'Du lịch nước ngoài', ex: '처음으로 해외여행을 갑니다. (Lần đầu tiên tôi đi du lịch nước ngoài.)' },
+            { w: '배낭여행', p: 'bae-nang-yeo-haeng', t: 'Danh từ', m: 'Du lịch ba lô (phượt)', ex: '대학생 때 유럽으로 배낭여행을 갔습니다. (Hồi sinh viên tôi đã đi du lịch bụi châu Âu.)' },
+            { w: '여행 상품', p: 'yeo-haeng sang-pum', t: 'Danh từ', m: 'Tour du lịch', ex: '여행사에서 저렴한 여행 상품을 샀습니다. (Tôi đã mua tour du lịch giá rẻ ở công ty du lịch.)' },
+            { w: '1박 2일', p: 'il-bak i-il', t: 'Danh từ', m: '2 ngày 1 đêm', ex: '부산으로 1박 2일 여행을 갔습니다. (Tôi đã đi du lịch Busan 2 ngày 1 đêm.)' },
+
+            // 2. Chỗ ở & Dịch vụ (Accommodation & Services)
+            { w: '호텔', p: 'ho-tel', t: 'Danh từ', m: 'Khách sạn', ex: '서울에 있는 호텔을 예약했습니다. (Tôi đã đặt khách sạn ở Seoul.)' },
+            { w: '민박', p: 'min-bak', t: 'Danh từ', m: 'Ở nhà dân', ex: '시골에서 민박을 체험했습니다. (Tôi đã trải nghiệm ở nhà dân tại vùng quê.)' },
+            { w: '콘도', p: 'kon-do', t: 'Danh từ', m: 'Khu nghỉ dưỡng (Condo)', ex: '친구들과 콘도에서 묵었습니다. (Tôi đã ở condo cùng với bạn bè.)' },
+            { w: '여행사', p: 'yeo-haeng-sa', t: 'Danh từ', m: 'Công ty du lịch', ex: '여행사에 비행기 표를 문의했습니다. (Tôi đã hỏi công ty du lịch về vé máy bay.)' },
+            { w: '예약', p: 'ye-yak', t: 'Danh từ', m: 'Đặt trước (chỗ ở/dịch vụ)', ex: '식당 예약을 확인했습니다. (Tôi đã xác nhận việc đặt chỗ nhà hàng.)' },
+            { w: '예매', p: 'ye-mae', t: 'Danh từ', m: 'Đặt mua trước (vé)', ex: '인터넷으로 기차표를 예매했습니다. (Tôi đã đặt mua vé tàu qua mạng.)' },
+            { w: '조식', p: 'jo-sik', t: 'Danh từ', m: 'Bữa sáng', ex: '호텔 조식이 맛있습니다. (Bữa sáng khách sạn rất ngon.)' },
+            { w: '입장료', p: 'ip-jang-ryo', t: 'Danh từ', m: 'Tiền vé vào cửa', ex: '박물관 입장료가 얼마입니까? (Vé vào cửa bảo tàng là bao nhiêu?)' },
+            { w: '환전', p: 'hwan-jeon', t: 'Danh từ', m: 'Đổi tiền', ex: '공항에서 환전을 했습니다. (Tôi đã đổi tiền ở sân bay.)' },
+
+            // 3. Chuẩn bị hành lý (Preparation)
+            { w: '보험', p: 'bo-heom', t: 'Danh từ', m: 'Bảo hiểm', ex: '여행자 보험에 가입했습니다. (Tôi đã mua bảo hiểm du lịch.)' },
+            { w: '비상약', p: 'bi-sang-yak', t: 'Danh từ', m: 'Thuốc dự phòng', ex: '여행 가방에 비상약을 챙겼습니다. (Tôi đã bỏ thuốc dự phòng vào túi du lịch.)' },
+            { w: '신용카드', p: 'sin-yong-ka-deu', t: 'Danh từ', m: 'Thẻ tín dụng', ex: '현금 대신 신용카드를 사용합니다. (Tôi dùng thẻ tín dụng thay cho tiền mặt.)' },
+            { w: '슬리퍼', p: 'seul-li-peo', t: 'Danh từ', m: 'Dép lê', ex: '해변에서 슬리퍼를 신었습니다. (Tôi đi dép lê ở bãi biển.)' },
+            { w: '세면도구', p: 'se-myeon-do-gu', t: 'Danh từ', m: 'Đồ rửa mặt/vệ sinh', ex: '호텔에 세면도구가 있습니다. (Trong khách sạn có đồ rửa mặt.)' },
+            { w: '선글라스', p: 'seon-geul-la-seu', t: 'Danh từ', m: 'Kính râm', ex: '햇빛이 강해서 선글라스를 썼습니다. (Vì nắng gắt nên tôi đeo kính râm.)' },
+            { w: '카메라', p: 'ka-me-ra', t: 'Danh từ', m: 'Máy ảnh', ex: '카메라로 사진을 찍습니다. (Tôi chụp ảnh bằng máy ảnh.)' },
+            { w: '비행기 표', p: 'bi-haeng-gi pyo', t: 'Danh từ', m: 'Vé máy bay', ex: '비행기 표를 잃어버리지 마세요. (Đừng làm mất vé máy bay.)' },
+            { w: '가방을 싸다', p: 'ga-bang-eul ssa-da', t: 'Cụm động từ', m: 'Sắp đồ vào túi', ex: '여행 가기 전에 가방을 쌉니다. (Tôi sắp đồ vào túi trước khi đi du lịch.)' },
+            { w: '여권을 만들다', p: 'yeo-gwon-eul man-deul-da', t: 'Cụm động từ', m: 'Làm hộ chiếu', ex: '해외여행을 위해 여권을 만들었습니다. (Tôi đã làm hộ chiếu để đi du lịch nước ngoài.)' },
+            { w: '비자를 받다', p: 'bi-ja-reul bat-da', t: 'Cụm động từ', m: 'Nhận visa', ex: '대사관에서 비자를 받았습니다. (Tôi đã nhận visa ở đại sứ quán.)' },
+            { w: '일정', p: 'il-jeong', t: 'Danh từ', m: 'Lịch trình', ex: '여행 일정을 짰습니다. (Tôi đã lên lịch trình du lịch.)' },
+
+            // 4. Địa điểm & Hoạt động (Places & Activities)
+            { w: '관광지', p: 'gwan-gwang-ji', t: 'Danh từ', m: 'Điểm du lịch', ex: '이곳은 유명한 관광지입니다. (Nơi này là địa điểm du lịch nổi tiếng.)' },
+            { w: '궁전', p: 'gung-jeon', t: 'Danh từ', m: 'Cung điện', ex: '왕이 살았던 궁전을 구경했습니다. (Tôi đã tham quan cung điện nơi vua từng sống.)' },
+            { w: '독립광장', p: 'dok-rip-gwang-jang', t: 'Danh từ', m: 'Quảng trường Độc lập', ex: '사람들이 독립광장에 모였습니다. (Mọi người đã tụ tập ở quảng trường Độc lập.)' },
+            { w: '문화재', p: 'mun-hwa-jae', t: 'Danh từ', m: 'Tài sản văn hóa', ex: '소중한 문화재를 보호해야 합니다. (Phải bảo vệ tài sản văn hóa quý giá.)' },
+            { w: '한옥', p: 'han-ok', t: 'Danh từ', m: 'Hanok (Nhà truyền thống)', ex: '전주 한옥 마을에 갔습니다. (Tôi đã đi đến làng nhà Hanok Jeonju.)' },
+            { w: '쇼', p: 'syo', t: 'Danh từ', m: 'Buổi trình diễn (Show)', ex: '저녁에 멋진 쇼를 봤습니다. (Buổi tối tôi đã xem buổi trình diễn tuyệt vời.)' },
+            { w: '일출', p: 'il-chul', t: 'Danh từ', m: 'Mặt trời mọc', ex: '바다에서 일출을 기다립니다. (Tôi chờ mặt trời mọc trên biển.)' },
+            { w: '마차', p: 'ma-cha', t: 'Danh từ', m: 'Xe ngựa', ex: '관광지에서 마차를 탔습니다. (Tôi đã đi xe ngựa ở điểm du lịch.)' },
+            { w: '약수', p: 'yak-su', t: 'Danh từ', m: 'Nước suối', ex: '산에서 시원한 약수를 마셨습니다. (Tôi đã uống nước suối mát lạnh trên núi.)' },
+            { w: '전통 놀이', p: 'jeon-tong nol-i', t: 'Danh từ', m: 'Trò chơi truyền thống', ex: '명절에 전통 놀이를 체험합니다. (Vào ngày lễ tết tôi trải nghiệm trò chơi truyền thống.)' },
+            { w: '유람선', p: 'yu-ram-seon', t: 'Danh từ', m: 'Du thuyền', ex: '한강에서 유람선을 탔습니다. (Tôi đã đi du thuyền trên sông Hàn.)' },
+            { w: '방문', p: 'bang-mun', t: 'Danh từ', m: 'Thăm viếng', ex: '박물관 방문 시간이 끝났습니다. (Giờ thăm viếng bảo tàng đã kết thúc.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-cyan-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-cyan-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

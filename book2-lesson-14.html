@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sơ cấp 2 - Bài 14: Kế hoạch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'], korean: ['Noto Sans KR', 'sans-serif'] },
+                    colors: { theme: '#059669' } /* Emerald Theme for Growth/Future */
+                }
+            }
+        }
+    </script>
+    <style> html { scroll-behavior: smooth; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-theme transition-colors font-bold text-sm">
+                <i class="ph-bold ph-arrow-left text-lg"></i> Menu
+            </a>
+            <div class="text-center">
+                <h1 class="font-bold text-lg text-slate-800 truncate">Bài 14: Kế hoạch (계획)</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Giáo trình Tổng hợp - Sơ cấp 2</p>
+            </div>
+            <div class="w-20 text-right text-xs text-slate-400 font-mono" id="vocab-count">0 TỪ</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-8">
+        
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold mb-3 border border-white/30">QUYỂN 2 - BÀI 14</div>
+                <h2 class="text-3xl font-extrabold mb-2">Chủ đề: Kế hoạch</h2>
+                <p class="text-emerald-100 opacity-90 max-w-lg">Từ vựng về học tập, định hướng nghề nghiệp và các loại hình công ty.</p>
+            </div>
+            <i class="ph-fill ph-graduation-cap absolute right-0 bottom-0 text-9xl text-white opacity-10 transform translate-x-4 translate-y-4"></i>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-xs font-extrabold text-slate-400 uppercase w-16 text-center">STT</th>
+                            <th class="p-4 text-xs font-extrabold text-theme uppercase w-40">Từ vựng</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-32">Phiên âm</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-24">Từ loại</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase w-48">Nghĩa</th>
+                            <th class="p-4 text-xs font-extrabold text-slate-500 uppercase min-w-[250px]">Ví dụ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const vocabularyList = [
+            // 1. Học tập & Tiến học (Study & Advancement)
+            { w: '진학', p: 'jin-hak', t: 'Danh từ', m: 'Học lên, tiến học', ex: '고등학교에 진학했습니다. (Tôi đã lên lớp cấp 3.)' },
+            { w: '유학', p: 'yu-hak', t: 'Danh từ', m: 'Du học', ex: '미국으로 유학을 갈 예정입니다. (Tôi dự định đi du học Mỹ.)' },
+            { w: '어학연수', p: 'eo-hak-yeon-su', t: 'Danh từ', m: 'Học tiếng (ngắn hạn)', ex: '방학 동안 어학연수를 다녀왔습니다. (Tôi đã đi học tiếng trong kỳ nghỉ.)' },
+            { w: '대학원', p: 'dae-hak-won', t: 'Danh từ', m: 'Cao học (Sau đại học)', ex: '대학원에 진학해서 더 공부하고 싶습니다. (Tôi muốn học lên cao học để học thêm.)' },
+            { w: '입학', p: 'ip-hak', t: 'Danh từ', m: 'Nhập học', ex: '초등학교 입학을 축하합니다. (Chúc mừng nhập học tiểu học.)' },
+            { w: '졸업', p: 'jol-eop', t: 'Danh từ', m: 'Tốt nghiệp', ex: '내년에 대학교를 졸업합니다. (Năm sau tôi tốt nghiệp đại học.)' },
+            { w: '등록금', p: 'deung-rok-geum', t: 'Danh từ', m: 'Tiền học phí', ex: '대학교 등록금이 비쌉니다. (Học phí đại học đắt.)' },
+            { w: '학기', p: 'hak-gi', t: 'Danh từ', m: 'Học kỳ', ex: '새 학기 계획을 세웁니다. (Tôi lập kế hoạch cho học kỳ mới.)' },
+            { w: '과목', p: 'gwa-mok', t: 'Danh từ', m: 'Môn học', ex: '한국어 과목을 좋아합니다. (Tôi thích môn tiếng Hàn.)' },
+
+            // 2. Nghề nghiệp (Professions)
+            { w: '연구자', p: 'yeon-gu-ja', t: 'Danh từ', m: 'Nhà nghiên cứu', ex: '그는 유명한 과학 연구자입니다. (Ông ấy là nhà nghiên cứu khoa học nổi tiếng.)' },
+            { w: '변호사', p: 'byeon-ho-sa', t: 'Danh từ', m: 'Luật sư', ex: '변호사가 법률 상담을 합니다. (Luật sư tư vấn pháp luật.)' },
+            { w: '아나운서', p: 'a-na-un-seo', t: 'Danh từ', m: 'Phát thanh viên', ex: '아나운서가 뉴스를 전합니다. (Phát thanh viên đang dẫn bản tin.)' },
+            { w: '미용사', p: 'mi-yong-sa', t: 'Danh từ', m: 'Chuyên viên trang điểm/làm tóc', ex: '미용사가 화장을 해 주었습니다. (Chuyên viên trang điểm đã trang điểm cho tôi.)' },
+            { w: '경영자', p: 'gyeong-yeong-ja', t: 'Danh từ', m: 'Nhà kinh doanh/Quản lý', ex: '그 회사의 경영자는 능력이 뛰어납니다. (Người kinh doanh của công ty đó có năng lực xuất sắc.)' },
+            { w: '주부', p: 'ju-bu', t: 'Danh từ', m: 'Nội trợ', ex: '우리 어머니는 주부이십니다. (Mẹ tôi là nội trợ.)' },
+
+            // 3. Cơ quan & Công ty (Organizations & Companies)
+            { w: '여행사', p: 'yeo-haeng-sa', t: 'Danh từ', m: 'Công ty du lịch', ex: '여행사에서 비행기 표를 샀습니다. (Tôi đã mua vé máy bay ở công ty du lịch.)' },
+            { w: '항공사', p: 'hang-gong-sa', t: 'Danh từ', m: 'Hãng hàng không', ex: '승무원은 항공사에서 일합니다. (Tiếp viên hàng không làm việc tại hãng hàng không.)' },
+            { w: '신문사', p: 'sin-mun-sa', t: 'Danh từ', m: 'Tòa soạn báo', ex: '기자가 신문사에서 기사를 씁니다. (Phóng viên viết bài tại tòa soạn báo.)' },
+            { w: '방송국', p: 'bang-song-guk', t: 'Danh từ', m: 'Đài truyền hình', ex: '방송국 견학을 갔습니다. (Tôi đã đi tham quan đài truyền hình.)' },
+            { w: '호텔', p: 'ho-tel', t: 'Danh từ', m: 'Khách sạn', ex: '호텔에서 손님을 맞이합니다. (Đón khách tại khách sạn.)' },
+            { w: '출판사', p: 'chul-pan-sa', t: 'Danh từ', m: 'Nhà xuất bản', ex: '출판사에서 책을 만듭니다. (Nhà xuất bản làm ra sách.)' },
+            { w: '무역 회사', p: 'mu-yeok hoe-sa', t: 'Danh từ', m: 'Công ty thương mại', ex: '무역 회사에서 수출 업무를 합니다. (Làm công việc xuất khẩu tại công ty thương mại.)' },
+            { w: '건설 회사', p: 'geon-seol hoe-sa', t: 'Danh từ', m: 'Công ty xây dựng', ex: '건설 회사에서 아파트를 짓습니다. (Công ty xây dựng xây chung cư.)' },
+            { w: '계획투자부', p: 'gye-hoek-tu-ja-bu', t: 'Danh từ', m: 'Bộ Kế hoạch & Đầu tư', ex: '계획투자부에서 일합니다. (Tôi làm việc tại Bộ Kế hoạch Đầu tư.)' },
+            { w: '자문 회사', p: 'ja-mun hoe-sa', t: 'Danh từ', m: 'Công ty tư vấn', ex: '전문가들이 있는 자문 회사입니다. (Đây là công ty tư vấn có các chuyên gia.)' },
+            { w: '공사', p: 'gong-sa', t: 'Danh từ', m: 'Công ty quốc doanh', ex: '전력 공사에 다닙니다. (Tôi làm việc ở công ty điện lực quốc doanh.)' },
+            { w: '산업 단지', p: 'san-eop dan-ji', t: 'Danh từ', m: 'Khu công nghiệp', ex: '공장들이 산업 단지에 모여 있습니다. (Các nhà máy tập trung ở khu công nghiệp.)' },
+            { w: '협력 회사', p: 'hyeom-nyeok hoe-sa', t: 'Danh từ', m: 'Công ty liên kết/đối tác', ex: '대기업의 협력 회사입니다. (Là công ty đối tác của tập đoàn lớn.)' },
+            { w: '외국 투자 회사', p: 'oe-guk tu-ja hoe-sa', t: 'Danh từ', m: 'Công ty đầu tư nước ngoài', ex: '외국 투자 회사에 취직했습니다. (Tôi đã xin việc vào công ty đầu tư nước ngoài.)' },
+            { w: '합작사', p: 'hap-jak-sa', t: 'Danh từ', m: 'Công ty liên doanh', ex: '두 회사가 만나 합작사를 설립했습니다. (Hai công ty gặp nhau và thành lập công ty liên doanh.)' },
+
+            // 4. Khác (Other)
+            { w: '관광지', p: 'gwan-gwang-ji', t: 'Danh từ', m: 'Điểm du lịch', ex: '이곳은 인기 있는 관광지입니다. (Nơi này là điểm du lịch được yêu thích.)' },
+            { w: '글쓰기', p: 'geul-sseu-gi', t: 'Danh từ', m: 'Viết văn', ex: '글쓰기 실력을 키우고 싶습니다. (Tôi muốn nuôi dưỡng năng lực viết văn.)' },
+            { w: '기타', p: 'gi-ta', t: 'Danh từ', m: 'Khác', ex: '기타 문의 사항은 연락 주세요. (Hãy liên lạc nếu có mục hỏi đáp khác.)' },
+            { w: '꿈', p: 'kkum', t: 'Danh từ', m: 'Giấc mơ', ex: '제 꿈은 의사가 되는 것입니다. (Giấc mơ của tôi là trở thành bác sĩ.)' },
+            { w: '끊다', p: 'kkeun-ta', t: 'Động từ', m: 'Ngắt, cúp (điện thoại)', ex: '전화를 끊지 마세요. (Đừng ngắt điện thoại.)' },
+            { w: '내려가다', p: 'nae-ryeo-ga-da', t: 'Động từ', m: 'Đi xuống', ex: '지하실로 내려갑니다. (Đi xuống tầng hầm.)' },
+            { w: '다녀오다', p: 'da-nyeo-o-da', t: 'Động từ', m: 'Đi rồi về', ex: '고향에 잘 다녀왔습니다. (Tôi đã về quê vui vẻ.)' },
+            { w: '대상', p: 'dae-sang', t: 'Danh từ', m: 'Giải nhất (Đại tưởng)', ex: '말하기 대회에서 대상을 탔습니다. (Tôi đã đoạt giải nhất cuộc thi nói.)' },
+            { w: '동안', p: 'dong-an', t: 'Danh từ', m: 'Trong suốt (khoảng thời gian)', ex: '방학 동안 아르바이트를 했습니다. (Tôi đã làm thêm trong suốt kỳ nghỉ.)' },
+            { w: '벌써', p: 'beol-sseo', t: 'Phó từ', m: 'Đã, rồi', ex: '벌써 숙제를 다 했습니까? (Đã làm xong bài tập rồi à?)' },
+            { w: '봉사 활동', p: 'bong-sa hwal-dong', t: 'Danh từ', m: 'Hoạt động tình nguyện', ex: '주말마다 봉사 활동을 갑니다. (Tôi đi hoạt động tình nguyện mỗi cuối tuần.)' },
+            { w: '상', p: 'sang', t: 'Danh từ', m: 'Giải thưởng', ex: '상을 받아서 기분이 좋습니다. (Nhận được giải thưởng nên tâm trạng tốt.)' },
+            { w: '언제든지', p: 'eon-je-deun-ji', t: 'Phó từ', m: 'Bất kỳ lúc nào', ex: '도움이 필요하면 언제든지 말하세요. (Nếu cần giúp đỡ hãy nói bất kỳ lúc nào.)' },
+            { w: '우수상', p: 'u-su-sang', t: 'Danh từ', m: 'Giải xuất sắc', ex: '우수상을 받고 상품도 받았습니다. (Tôi đã nhận giải xuất sắc và cả quà tặng.)' },
+            { w: '운동장', p: 'un-dong-jang', t: 'Danh từ', m: 'Sân vận động', ex: '운동장에서 축구를 합니다. (Tôi đá bóng ở sân vận động.)' },
+            { w: '응원', p: 'eung-won', t: 'Danh từ', m: 'Cổ vũ', ex: '열심히 응원했습니다. (Tôi đã cổ vũ nhiệt tình.)' },
+            { w: '인기상', p: 'in-gi-sang', t: 'Danh từ', m: 'Giải được yêu thích', ex: '관객들이 뽑은 인기상을 받았습니다. (Tôi đã nhận giải được yêu thích do khán giả bình chọn.)' },
+            { w: '일시', p: 'il-si', t: 'Danh từ', m: 'Ngày giờ', ex: '시험 일시를 확인하세요. (Hãy kiểm tra ngày giờ thi.)' },
+            { w: '자르다', p: 'ja-reu-da', t: 'Động từ', m: 'Cắt', ex: '가위로 종이를 자릅니다. (Cắt giấy bằng kéo.)' },
+            { w: '최우수상', p: 'choe-u-su-sang', t: 'Danh từ', m: 'Giải xuất sắc nhất', ex: '가장 잘한 사람에게 최우수상을 줍니다. (Trao giải xuất sắc nhất cho người làm tốt nhất.)' },
+            { w: '취직', p: 'chwi-jik', t: 'Danh từ', m: 'Xin việc', ex: '한국 회사에 취직했습니다. (Tôi đã xin việc vào công ty Hàn Quốc.)' },
+            { w: '특히', p: 'teuk-hi', t: 'Phó từ', m: 'Đặc biệt', ex: '저는 운동 중에서도 특히 수영을 좋아합니다. (Trong các môn thể thao tôi đặc biệt thích bơi lội.)' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            document.getElementById('vocab-count').innerText = `${vocabularyList.length} TỪ`;
+            let html = '';
+            vocabularyList.forEach((item, index) => {
+                html += `
+                <tr class="hover:bg-emerald-50/50 transition-colors border-b border-slate-50 last:border-0 group">
+                    <td class="p-4 text-center text-slate-400 font-mono text-xs font-bold">${index + 1}</td>
+                    <td class="p-4"><span class="font-korean text-lg font-bold text-slate-700 group-hover:text-theme transition-colors">${item.w}</span></td>
+                    <td class="p-4 text-xs font-mono text-slate-500">[${item.p}]</td>
+                    <td class="p-4"><span class="inline-block px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase border border-slate-200">${item.t}</span></td>
+                    <td class="p-4 text-sm font-bold text-slate-700">${item.m}</td>
+                    <td class="p-4"><div class="text-sm text-slate-600 bg-slate-50 p-2 rounded italic group-hover:bg-white border border-transparent group-hover:border-emerald-100 transition-all">${item.ex}</div></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
